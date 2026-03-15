@@ -1,0 +1,31 @@
+# v0 runtime files
+_v0_runtime_loader.js
+_v0_devtools.tsx
+_v0_jsx-dev-runtime.ts
+
+# Common ignores
+node_modules/
+.next/
+.env*
+.env*.local
+.vercel
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# build
+dist/
+build/
+.cache/
+.tmp/
+
+# editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

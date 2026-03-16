@@ -1,5 +1,6 @@
 export type EventStatus = "upcoming" | "cfp" | "reg-open" | "past";
 export type EventType = "conference" | "workshop" | "seminar";
+const API_URL = "http://localhost:1337/api/activities?populate=deadline";
 
 export interface EventDeadline {
   label_th: string;
@@ -31,6 +32,52 @@ export interface ECTIEvent {
   tracks: EventTrack[];
   topics: string[];
   organizer: string;
+}
+
+// func fetch
+export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
+  const res = await fetch(API_URL, {
+    cache: "no-store",
+  });
+
+  const json = await res.json();
+
+  return json.data.map((item: any) => {
+    const attr = item;
+
+    return {
+      slug: item.documentId || item.id.toString(),
+      title: attr.title,
+
+      date_th: attr.event_start_date,
+      date_en: attr.event_start_date,
+
+      location_th: attr.location,
+      location_en: attr.location,
+
+      description_th: "",
+      description_en: "",
+
+      overview_th: "",
+      overview_en: "",
+
+      status: attr.event_status,
+      type: attr.type,
+      year: attr.year,
+
+      deadlines:
+        attr.deadline?.map((d: any) => ({
+          label_th: d.title,
+          label_en: d.title,
+          date_th: d.date,
+          date_en: d.date,
+        })) || [],
+
+      tracks: [],
+      topics: [],
+      organizer: "",
+    };
+  });
 }
 
 export const events: ECTIEvent[] = [
@@ -315,4 +362,50 @@ export function getUniqueYears(): number[] {
 export function getUniqueLocations(locale: "th" | "en"): string[] {
   const key = locale === "th" ? "location_th" : "location_en";
   return [...new Set(events.map((e) => e[key]))].sort();
+}
+
+//create func fetch
+export async function fetchEvents(): Promise<ECTIEvent[]> {
+  const res = await fetch(API_URL, {
+    cache: "no-store",
+  });
+
+  const json = await res.json();
+
+  return json.data.map((item: any) => {
+    const attr = item;
+
+    return {
+      slug: item.documentId || item.id.toString(),
+      title: attr.title,
+
+      date_th: attr.event_start_date,
+      date_en: attr.event_start_date,
+
+      location_th: attr.location,
+      location_en: attr.location,
+
+      description_th: "",
+      description_en: "",
+
+      overview_th: "",
+      overview_en: "",
+
+      status: attr.event_status,
+      type: attr.type,
+      year: attr.year,
+
+      deadlines:
+        attr.deadline?.map((d: any) => ({
+          label_th: d.title,
+          label_en: d.title,
+          date_th: d.date,
+          date_en: d.date,
+        })) || [],
+
+      tracks: [],
+      topics: [],
+      organizer: "",
+    };
+  });
 }

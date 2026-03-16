@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { EventsListClient } from "@/components/events-list-client";
-import { events, getUniqueYears, getUniqueLocations } from "@/lib/events-data";
+import { fetchEventsFromAPI, getUniqueYears, getUniqueLocations } from "@/lib/events-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -29,6 +29,8 @@ export default async function EventsPage({ params }: PageProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
+
+  const events = await fetchEventsFromAPI();
 
   const years = getUniqueYears();
   const locations = getUniqueLocations(locale as Locale);

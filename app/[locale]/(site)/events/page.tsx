@@ -32,8 +32,20 @@ export default async function EventsPage({ params }: PageProps) {
 
   const events = await fetchEventsFromAPI();
 
+  /* เรียกตอนใช้ mock จารย์
   const years = getUniqueYears();
   const locations = getUniqueLocations(locale as Locale);
+  */
+
+  const years = [...new Set(events.map(e => e.year))];
+
+  const locations = [
+    ...new Set(
+      events.map(e =>
+        locale === "th" ? e.location_th : e.location_en
+      )
+    ),
+  ];
 
   return (
     <>

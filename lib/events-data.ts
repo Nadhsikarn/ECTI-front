@@ -1,6 +1,6 @@
 export type EventStatus = "upcoming" | "cfp" | "reg-open" | "past";
 export type EventType = "conference" | "workshop" | "seminar";
-const API_URL = "http://localhost:1337/api/activities?populate=deadline";
+const API_URL = "http://localhost:1337/api/activities?populate=*";
 
 export interface EventDeadline {
   label_th: string;
@@ -33,6 +33,25 @@ export interface ECTIEvent {
   topics: string[];
   organizer: string;
 }
+
+//fetch by slug
+export async function fetchEventBySlug(slug : string){
+  const res = await fetch(`${API_URL}?filters[slug][$eq]=${slug}`,
+  { cache: "no-store" }
+  );
+
+  const json = await res.json();
+
+  console.log("FETCH BY SLUG =", json);
+
+  if (!json.data || json.data.length === 0) {
+    return null;
+  }
+
+  const item = json.data[0];
+  return item;
+}
+
 
 // func fetch
 export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {

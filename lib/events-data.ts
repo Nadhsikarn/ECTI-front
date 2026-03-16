@@ -49,8 +49,8 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
       slug: item.documentId || item.id.toString(),
       title: attr.title,
 
-      date_th: attr.event_start_date,
-      date_en: attr.event_start_date,
+      date_th: formatDateTH(attr.event_start_date),
+      date_en: formatDateEN(attr.event_start_date),
 
       location_th: attr.location,
       location_en: attr.location,
@@ -69,14 +69,31 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
         attr.deadline?.map((d: any) => ({
           label_th: d.title,
           label_en: d.title,
-          date_th: d.date,
-          date_en: d.date,
+          date_th: formatDateTH(d.date),
+          date_en: formatDateEN(d.date),
         })) || [],
 
       tracks: [],
       topics: [],
       organizer: "",
     };
+  });
+}
+
+//ทำให้ตรงตาม format วันที่ของจารย์
+function formatDateEN(date: string) {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function formatDateTH(date: string) {
+  return new Date(date).toLocaleDateString("th-TH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 

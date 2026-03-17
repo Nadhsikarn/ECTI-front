@@ -5,6 +5,8 @@ import { PageHeader } from "@/components/page-header";
 import { EventsListClient } from "@/components/events-list-client";
 import { fetchEventsFromAPI, getUniqueYears, getUniqueLocations } from "@/lib/events-data";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }

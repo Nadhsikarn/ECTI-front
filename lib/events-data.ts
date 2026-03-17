@@ -1,6 +1,9 @@
 export type EventStatus = "upcoming" | "cfp" | "reg-open" | "past";
 export type EventType = "conference" | "workshop" | "seminar";
-const API_URL = "http://localhost:1337/api/activities?populate=*";
+const API_URL =
+  `${process.env.NEXT_PUBLIC_API_URL}/api/activities?populate=*`;
+  
+console.log("API_URL =", API_URL);
 
 export interface EventDeadline {
   label_th: string;
@@ -17,6 +20,7 @@ export interface EventTrack {
 export interface ECTIEvent {
   slug: string;
   title: string;
+  title_en? : string;
   date_th: string;
   date_en: string;
   location_th: string;
@@ -67,12 +71,13 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
     return {
       slug: item.documentId || item.id.toString(),
       title: attr.title,
+      title_en : attr.title_en,
 
       date_th: formatDateTH(attr.event_start_date),
       date_en: formatDateEN(attr.event_start_date),
 
       location_th: attr.location,
-      location_en: attr.location,
+      location_en: attr.location_en,
 
       description_th: "",
       description_en: "",
@@ -115,6 +120,7 @@ function formatDateTH(date: string) {
     day: "numeric",
   });
 }
+
 
 export const events: ECTIEvent[] = [
   {
@@ -385,7 +391,7 @@ export const events: ECTIEvent[] = [
     ],
     organizer: "ECTI Association & Prince of Songkla University",
   },
-];
+]; 
 
 export function getEventBySlug(slug: string): ECTIEvent | undefined {
   return events.find((e) => e.slug === slug);
@@ -400,7 +406,7 @@ export function getUniqueLocations(locale: "th" | "en"): string[] {
   return [...new Set(events.map((e) => e[key]))].sort();
 }
 
-//create func fetch
+/*create func fetch ของจารย์
 export async function fetchEvents(): Promise<ECTIEvent[]> {
   const res = await fetch(API_URL, {
     cache: "no-store",
@@ -444,4 +450,4 @@ export async function fetchEvents(): Promise<ECTIEvent[]> {
       organizer: "",
     };
   });
-}
+} */

@@ -367,7 +367,7 @@ function EventCard({
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center gap-2.5">
               <h3 className="text-lg font-semibold text-card-foreground">
-                {event.title}
+                {locale == "th" ? event.title : event.title_en}
               </h3>
               <Badge className={getStatusStyle(event.status)}>
                 {getStatusLabel(event.status, dict)}
@@ -390,7 +390,7 @@ function EventCard({
           </span>
           <span className="flex items-center gap-1.5">
             <MapPin className="h-4 w-4 shrink-0 text-primary" />
-            {location}
+            {locale == "th" ? event.location_th : event.location_en}
           </span>
         </div>
 

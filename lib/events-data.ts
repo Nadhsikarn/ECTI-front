@@ -39,53 +39,44 @@ export interface ECTIEvent {
 }
 
 //fetch by slug
-export async function fetchEventBySlug(slug : string){
-  const res = await fetch(`${API_URL}?filters[slug][$eq]=${slug}`,
-  { cache: "no-store" }
+export async function fetchEventBySlug(slug: string) {
+  const res = await fetch(
+    `${API_URL}?filters[slug][$eq]=${slug}&populate=*`,
+    { cache: "no-store" }
   );
 
   const json = await res.json();
-
-  console.log("FETCH BY SLUG =", json);
 
   if (!json.data || json.data.length === 0) {
     return null;
   }
 
-  const item = json.data[0];
-  return item;
+  return json.data[0];
 }
-
 
 // func fetch
 export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
-  const res = await fetch(API_URL, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${API_URL}?populate=*`,
+    { cache: "no-store" }
+  );
 
   const json = await res.json();
-
-  console.log("DATA =", json.data[0]);
 
   return json.data.map((item: any) => {
     const attr = item;
 
     return {
-      slug: item.documentId || item.id.toString(),
+      slug: attr.slug ?? item.id.toString(),
+
       title: attr.title,
-      title_en : attr.title_en,
+      title_en: attr.title_en,
 
       date_th: formatDateTH(attr.event_start_date),
       date_en: formatDateEN(attr.event_start_date),
 
       location_th: attr.location,
       location_en: attr.location_en,
-
-      description_th: "",
-      description_en: "",
-
-      overview_th: "",
-      overview_en: "",
 
       status: attr.event_status,
       type: attr.type,
@@ -97,11 +88,7 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
           label_en: d.title,
           date_th: formatDateTH(d.date),
           date_en: formatDateEN(d.date),
-        })) || [],
-
-      tracks: [],
-      topics: [],
-      organizer: "",
+        })) || []
     };
   });
 }

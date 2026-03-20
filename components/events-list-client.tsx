@@ -30,36 +30,36 @@ interface EventsListClientProps {
   locale: Locale;
   dict: Dictionary;
   events: ECTIEvent[];
-  years: number[];
+  years: string[];
   locations: string[];
 }
 
 const STATUS_ORDER: Record<EventStatus, number> = {
-  cfp: 0,
-  "reg-open": 1,
+  open: 0,
+  register: 1,
   upcoming: 2,
-  past: 3,
+  finished: 3,
 };
 
 function getStatusLabel(status: EventStatus, dict: Dictionary): string {
   const map: Record<EventStatus, string> = {
+    open: dict.events.statusCfp,
+    register: dict.events.statusRegOpen,
     upcoming: dict.events.statusUpcoming,
-    cfp: dict.events.statusCfp,
-    "reg-open": dict.events.statusRegOpen,
-    past: dict.events.statusPast,
+    finished: dict.events.statusPast,
   };
   return map[status];
 }
 
 function getStatusStyle(status: EventStatus): string {
   switch (status) {
-    case "cfp":
+    case "open":
       return "bg-accent text-accent-foreground";
-    case "reg-open":
+    case "register":
       return "bg-primary text-primary-foreground";
     case "upcoming":
       return "bg-chart-4 text-primary-foreground";
-    case "past":
+    case "finished":
       return "bg-muted text-muted-foreground";
   }
 }
@@ -102,7 +102,7 @@ export function EventsListClient({
     }
 
     if (yearFilter !== "all") {
-      result = result.filter((e) => e.year === Number(yearFilter));
+      result = result.filter((e) => String(e.year) === yearFilter);
     }
     if (typeFilter !== "all") {
       result = result.filter((e) => e.type === typeFilter);
@@ -189,10 +189,10 @@ export function EventsListClient({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{dict.events.filterAll}</SelectItem>
-              <SelectItem value="cfp">{dict.events.statusCfp}</SelectItem>
-              <SelectItem value="reg-open">{dict.events.statusRegOpen}</SelectItem>
+              <SelectItem value="open">{dict.events.statusCfp}</SelectItem>
+              <SelectItem value="register">{dict.events.statusRegOpen}</SelectItem>
               <SelectItem value="upcoming">{dict.events.statusUpcoming}</SelectItem>
-              <SelectItem value="past">{dict.events.statusPast}</SelectItem>
+              <SelectItem value="finished">{dict.events.statusPast}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -409,23 +409,17 @@ function EventCard({
 
         {/* Actions */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <Link href={`/${locale}/events/${event.slug}`}>
-            <Button variant="outline" size="sm" className="gap-1.5">
-              {dict.events.btnDetails}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
-          </Link>
-          {event.status === "cfp" && (
-            <Button size="sm" className="gap-1.5 bg-accent text-accent-foreground hover:bg-accent/90">
-              <CalendarCheck className="h-3.5 w-3.5" />
-              {dict.events.btnSubmitPaper}
-            </Button>
-          )}
-          {(event.status === "reg-open" || event.status === "upcoming") && (
-            <Button size="sm" className="gap-1.5">
-              <CalendarCheck className="h-3.5 w-3.5" />
-              {dict.events.btnRegister}
-            </Button>
+          <Button variant="outline" size="sm" className="gap-1.5" disabled>
+            {dict.events.btnDetails}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Button>
+          {event.register_url && event.status !== "finished" && (
+            <a href={event.register_url} target="_blank" rel="noopener noreferrer">
+              <Button size="sm" className={`gap-1.5 ${event.status === "open" ? "bg-red-600 hover:bg-red-700 text-white" : ""}`}>
+                <CalendarCheck className="h-3.5 w-3.5" />
+                {event.status === "open" ? dict.events.btnSubmitPaper : dict.events.btnRegister}
+              </Button>
+            </a>
           )}
         </div>
       </CardContent>

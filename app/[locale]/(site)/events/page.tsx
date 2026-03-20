@@ -39,7 +39,7 @@ export default async function EventsPage({ params }: PageProps) {
   const locations = getUniqueLocations(locale as Locale);
   */
 
-  const years = [...new Set(events.map(e => e.year))];
+  const years = [...new Set(events.map(e => String(e.year)))].sort((a, b) => Number(b) - Number(a));
 
   const locations = [
     ...new Set(

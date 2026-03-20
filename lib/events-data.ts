@@ -1,7 +1,7 @@
 export type EventStatus = "upcoming" | "cfp" | "reg-open" | "past";
 export type EventType = "conference" | "workshop" | "seminar";
 const API_URL =
-  `${process.env.NEXT_PUBLIC_API_URL}/api/activities?populate=*`;
+  `${process.env.NEXT_PUBLIC_API_URL}/api/activities`;
   
 console.log("API_URL =", API_URL);
 
@@ -64,6 +64,8 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
   });
 
   const json = await res.json();
+
+  console.log("DATA =", json.data[0]);
 
   return json.data.map((item: any) => {
     const attr = item;

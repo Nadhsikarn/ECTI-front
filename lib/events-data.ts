@@ -1,8 +1,9 @@
-export type EventStatus = "upcoming" | "cfp" | "reg-open" | "past";
+export type EventStatus = "open" | "register" | "upcoming" | "finished";
 export type EventType = "conference" | "workshop" | "seminar";
-const API_URL =
-  `${process.env.NEXT_PUBLIC_API_URL}/api/activities`;
-  
+
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+const API_URL = `${BASE_URL}/api/activities?populate=*`;
+
 console.log("API_URL =", API_URL);
 
 export interface EventDeadline {
@@ -17,10 +18,15 @@ export interface EventTrack {
   name_en: string;
 }
 
+export interface EventButton {
+  url: string;
+  type: string;
+}
+
 export interface ECTIEvent {
   slug: string;
   title: string;
-  title_en? : string;
+  title_en?: string;
   date_th: string;
   date_en: string;
   location_th: string;
@@ -31,23 +37,25 @@ export interface ECTIEvent {
   overview_en: string;
   status: EventStatus;
   type: EventType;
-  year: number;
+  year: string;
   deadlines: EventDeadline[];
   tracks: EventTrack[];
   topics: string[];
   organizer: string;
+  register_url: string;
 }
 
 //fetch by slug
 export async function fetchEventBySlug(slug: string) {
-  const res = await fetch(
-    `${API_URL}?filters[slug][$eq]=${slug}&populate=*`,
+  const res = await fetch(`${API_URL}?filters[slug][$eq]=${slug}`,
     { cache: "no-store" }
   );
 
   const json = await res.json();
 
-  if (!json.data || json.data.length === 0) {
+  console.log("FETCH BY SLUG =", json);
+
+  if (!json || !Array.isArray(json.data) || json.data.length === 0) {
     return null;
   }
 
@@ -62,6 +70,11 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
   );
 
   const json = await res.json();
+
+  if (!json || !Array.isArray(json.data)) {
+    console.warn("fetchEventsFromAPI: Invalid data received", json);
+    return [];
+  }
 
   return json.data.map((item: any) => {
     const attr = item;
@@ -78,6 +91,12 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
       location_th: attr.location,
       location_en: attr.location_en,
 
+      description_th: attr.description?.[0]?.children?.[0]?.text || "",
+      description_en: attr.description_en?.[0]?.children?.[0]?.text || "",
+
+      overview_th: "",
+      overview_en: "",
+
       status: attr.event_status,
       type: attr.type,
       year: attr.year,
@@ -88,7 +107,12 @@ export async function fetchEventsFromAPI(): Promise<ECTIEvent[]> {
           label_en: d.title,
           date_th: formatDateTH(d.date),
           date_en: formatDateEN(d.date),
-        })) || []
+        })) || [],
+
+      tracks: [],
+      topics: [],
+      organizer: "",
+      register_url: attr.register_url || "",
     };
   });
 }
@@ -127,9 +151,9 @@ export const events: ECTIEvent[] = [
       "ECTI-CON 2026 เป็นการประชุมวิชาการนานาชาติประจำปีที่จัดโดยสมาคม ECTI เปิดรับบทความวิจัยคุณภาพสูงในสาขาวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ โทรคมนาคม และสารสนเทศ โดยบทความที่ได้รับคัดเลือกจะถูกตีพิมพ์ใน IEEE Xplore และวารสาร ECTI Transactions",
     overview_en:
       "ECTI-CON 2026 is the annual flagship international conference organized by ECTI Association. It welcomes high-quality research papers in Electrical Engineering/Electronics, Computer, Telecommunications, and Information Technology. Accepted papers will be published in IEEE Xplore and ECTI Transactions journals.",
-    status: "cfp",
+    status: "open",
     type: "conference",
-    year: 2026,
+    year: "2026",
     deadlines: [
       {
         label_th: "กำหนดส่งบทความ",
@@ -174,6 +198,7 @@ export const events: ECTIEvent[] = [
       "VLSI & Circuit Design",
     ],
     organizer: "ECTI Association & Chiang Mai University",
+    register_url: "",
   },
   {
     slug: "ecti-card-2026",
@@ -190,9 +215,9 @@ export const events: ECTIEvent[] = [
       "ECTI-CARD 2026 เป็นเวทีสำหรับนำเสนอผลงานวิจัยประยุกต์และการพัฒนาเทคโนโลยีในสาขาที่เกี่ยวข้อง เน้นการเชื่อมโยงผลงานวิจัยสู่การใช้งานจริง",
     overview_en:
       "ECTI-CARD 2026 provides a platform for presenting applied research and technology development in related fields, emphasizing the bridge between research and real-world applications.",
-    status: "reg-open",
+    status: "register",
     type: "conference",
-    year: 2026,
+    year: "2026",
     deadlines: [
       {
         label_th: "กำหนดส่งบทความ",
@@ -226,6 +251,7 @@ export const events: ECTIEvent[] = [
       "Industrial IoT",
     ],
     organizer: "ECTI Association & Chiang Mai University",
+    register_url: "",
   },
   {
     slug: "ai-iot-workshop-2026",
@@ -242,9 +268,9 @@ export const events: ECTIEvent[] = [
       "สัมมนาเชิงปฏิบัติการ 1 วัน ครอบคลุมพื้นฐาน AI/ML, การใช้ TensorFlow และ PyTorch, การพัฒนาระบบ IoT ด้วย ESP32 และ Raspberry Pi พร้อมโปรเจกต์จริง",
     overview_en:
       "A one-day hands-on workshop covering AI/ML fundamentals, TensorFlow and PyTorch usage, IoT development with ESP32 and Raspberry Pi, with real project demonstrations.",
-    status: "past",
+    status: "finished",
     type: "workshop",
-    year: 2026,
+    year: "2026",
     deadlines: [
       {
         label_th: "ลงทะเบียน",
@@ -264,6 +290,7 @@ export const events: ECTIEvent[] = [
       "Smart Home",
     ],
     organizer: "ECTI Association & Chulalongkorn University",
+    register_url: "",
   },
   {
     slug: "ecti-con-2025",
@@ -280,9 +307,9 @@ export const events: ECTIEvent[] = [
       "ECTI-CON 2025 ประสบความสำเร็จด้วยผู้เข้าร่วมกว่า 500 คนจาก 15 ประเทศ มีการนำเสนอบทความวิจัยกว่า 200 บทความ",
     overview_en:
       "ECTI-CON 2025 was a great success with over 500 participants from 15 countries and more than 200 research paper presentations.",
-    status: "past",
+    status: "finished",
     type: "conference",
-    year: 2025,
+    year: "2025",
     deadlines: [],
     tracks: [
       { name_th: "วิศวกรรมไฟฟ้า", name_en: "Electrical Engineering" },
@@ -298,6 +325,7 @@ export const events: ECTIEvent[] = [
       "Edge Computing",
     ],
     organizer: "ECTI Association & KMUTNB",
+    register_url: "",
   },
   {
     slug: "quantum-computing-seminar-2025",
@@ -314,9 +342,9 @@ export const events: ECTIEvent[] = [
       "สัมมนาครึ่งวันโดยผู้เชี่ยวชาญด้านการประมวลผลควอนตัมจากมหาวิทยาลัยชั้นนำ ครอบคลุมทฤษฎีพื้นฐาน, อัลกอริทึมควอนตัม, และการประยุกต์ใช้งานจริง",
     overview_en:
       "A half-day seminar by quantum computing experts from leading universities, covering fundamental theory, quantum algorithms, and real-world applications.",
-    status: "past",
+    status: "finished",
     type: "seminar",
-    year: 2025,
+    year: "2025",
     deadlines: [],
     tracks: [
       { name_th: "การประมวลผลควอนตัม", name_en: "Quantum Computing" },
@@ -327,6 +355,7 @@ export const events: ECTIEvent[] = [
       "Quantum Machine Learning",
     ],
     organizer: "ECTI Association & Kasetsart University",
+    register_url: "",
   },
   {
     slug: "ecti-dacon-2026",
@@ -345,7 +374,7 @@ export const events: ECTIEvent[] = [
       "ECTI-DACON 2026 is an academic conference focused on data science, machine learning, and modern communication systems research.",
     status: "upcoming",
     type: "conference",
-    year: 2026,
+    year: "2026",
     deadlines: [
       {
         label_th: "กำหนดส่งบทความ",
@@ -379,15 +408,16 @@ export const events: ECTIEvent[] = [
       "Network Security",
     ],
     organizer: "ECTI Association & Prince of Songkla University",
+    register_url: "",
   },
-]; 
+];
 
 export function getEventBySlug(slug: string): ECTIEvent | undefined {
   return events.find((e) => e.slug === slug);
 }
 
-export function getUniqueYears(): number[] {
-  return [...new Set(events.map((e) => e.year))].sort((a, b) => b - a);
+export function getUniqueYears(): string[] {
+  return [...new Set(events.map((e) => String(e.year)))].sort((a, b) => Number(b) - Number(a));
 }
 
 export function getUniqueLocations(locale: "th" | "en"): string[] {

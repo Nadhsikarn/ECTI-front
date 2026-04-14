@@ -2,7 +2,7 @@ export type EventStatus = "open" | "register" | "upcoming" | "finished";
 export type EventType = "conference" | "workshop" | "seminar";
 
 const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
-const API_URL = `${BASE_URL}/api/activities?populate=*`;
+const API_URL = `${BASE_URL}/api/activities`;
 
 console.log("API_URL =", API_URL);
 
@@ -47,7 +47,8 @@ export interface ECTIEvent {
 
 //fetch by slug
 export async function fetchEventBySlug(slug: string) {
-  const res = await fetch(`${API_URL}?filters[slug][$eq]=${slug}`,
+  const res = await fetch(
+    `${API_URL}?populate=*&filters[slug][$eq]=${slug}`,
     { cache: "no-store" }
   );
 

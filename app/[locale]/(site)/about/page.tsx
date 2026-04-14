@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BoardFilter } from "@/components/board-filter";
 import { Target, Eye, ListChecks, Check } from "lucide-react";
+import { getBoardMembers } from "@/lib/about-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -85,7 +86,7 @@ export default async function AboutPage({ params }: PageProps) {
     },
   ];
 
-  const boardMembers = [
+/*  const boardMembers = [
     { name: isTh ? "ศ.ดร. ก. กิตติคุณ" : "Prof. Dr. A. Kittikun", role: isTh ? "นายกสมาคม" : "President", institution: isTh ? "มหาวิทยาลัย ก" : "University A", committee: "exec" as const, image: "/images/people/person-a.jpg" },
     { name: isTh ? "รศ.ดร. ข. ขจรศักดิ์" : "Assoc. Prof. Dr. B. Kajornsak", role: isTh ? "อุปนายก" : "Vice President", institution: isTh ? "มหาวิทยาลัย ข" : "University B", committee: "exec" as const, image: "/images/people/person-b.jpg" },
     { name: isTh ? "ผศ.ดร. ค. คมสัน" : "Asst. Prof. Dr. C. Komsan", role: isTh ? "เลขาธิการ" : "Secretary", institution: isTh ? "มหาวิทยาลัย ค" : "University C", committee: "exec" as const, image: "/images/people/person-c.jpg" },
@@ -96,7 +97,19 @@ export default async function AboutPage({ params }: PageProps) {
     { name: isTh ? "ศ.ดร. ซ. เซียนศักดิ์" : "Prof. Dr. H. Siansak", role: isTh ? "บรรณาธิการ ECTI-EEC" : "Editor-in-Chief, ECTI-EEC", institution: isTh ? "มหาวิทยาลัย ซ" : "University H", committee: "publications" as const, image: "/images/people/person-h.jpg" },
     { name: isTh ? "รศ.ดร. ฌ. เฌอศิริ" : "Assoc. Prof. Dr. I. Chersiri", role: isTh ? "บรรณาธิการ ECTI-CIT" : "Editor-in-Chief, ECTI-CIT", institution: isTh ? "มหาวิทยาลัย ฌ" : "University I", committee: "publications" as const, image: "/images/people/person-i.jpg" },
     { name: isTh ? "ผศ.ดร. ญ. ญาณวุฒิ" : "Asst. Prof. Dr. J. Yanawut", role: isTh ? "ผู้ช่วยบรรณาธิการ" : "Associate Editor", institution: isTh ? "มหาวิทยาลัย ญ" : "University J", committee: "publications" as const, image: "/images/people/person-j.jpg" },
-  ];
+  ];*/
+
+  const rawMembers = await getBoardMembers();
+
+  const boardMembers = rawMembers.map((m) => ({
+    name: isTh ? m.name : m.name_en,
+    role: isTh ? m.role : m.role_en,
+    institution: isTh ? m.institution : m.institution_en,
+    committee: m.committee,
+    image: m.image
+      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${m.image.url}`
+      : "/images/placeholder.jpg",
+  }));
 
   return (
     <>

@@ -294,7 +294,12 @@ function NewsCard({
   const isTh = locale === "th";
   const title = isTh ? post.title_th : post.title_en;
   const summary = isTh ? post.summary_th : post.summary_en;
-  const date = isTh ? post.date_th : post.date_en;
+  const date = post.date
+  ? new Date(post.date).toLocaleDateString(
+      isTh ? "th-TH" : "en-US",
+      { year: "numeric", month: "long", day: "numeric" }
+    )
+  : "";
 
   return (
     <Card className="group flex flex-col border-border transition-shadow hover:shadow-lg">

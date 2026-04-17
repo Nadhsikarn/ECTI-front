@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { NewsListClient } from "@/components/news-list-client";
-import { newsPosts } from "@/lib/news-data";
+import { getNewsPosts } from "@/lib/news-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -29,6 +29,7 @@ export default async function NewsPage({ params }: PageProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
+  const posts = await getNewsPosts();
 
   return (
     <>
@@ -43,7 +44,7 @@ export default async function NewsPage({ params }: PageProps) {
       <NewsListClient
         locale={locale as Locale}
         dict={dict}
-        posts={newsPosts}
+        posts={posts}
       />
     </>
   );

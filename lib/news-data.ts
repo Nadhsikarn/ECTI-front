@@ -6,22 +6,44 @@ export type NewsTag =
   | "community";
 
 export interface NewsPost {
+  id: number;
   slug: string;
   title_th: string;
   title_en: string;
   summary_th: string;
   summary_en: string;
-  body_th: string;
-  body_en: string;
-  date: string; // ISO date for sorting
-  date_th: string;
-  date_en: string;
+  body: any[];      // Rich text blocks
+  body_en: any[];
+  date: string;     // ISO date
   tags: NewsTag[];
   author?: string;
   readTimeMin: number;
 }
 
-export const newsPosts: NewsPost[] = [
+export async function getNewsPosts(): Promise<NewsPost[]> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/news-posts?populate=tags&sort=date:desc`,
+    { next: { revalidate: 3600 } }
+  );
+  if (!res.ok) return [];
+  const json = await res.json();
+  return json.data.map((item: any) => ({
+    id: item.id,
+    slug: item.slug,
+    title_th: item.title ?? "",
+    title_en: item.title_en ?? "",
+    summary_th: item.summary ?? "",
+    summary_en: item.summary_en ?? "",
+    body: item.body ?? [],
+    body_en: item.body_en ?? [],
+    date: item.date ?? "",
+    tags: (item.tags ?? []).map((t: any) => t.name_en as NewsTag),
+    author: item.author ?? undefined,
+    readTimeMin: item.read_time_min ?? 1,
+  }));
+}
+
+/*export const newsPosts: NewsPost[] = [
   {
     slug: "ecti-con-2026-cfp",
     title_th: "เปิดรับบทความ ECTI-CON 2026",
@@ -169,22 +191,41 @@ export const newsPosts: NewsPost[] = [
     tags: ["announcements", "cfp"],
     readTimeMin: 2,
   },
-];
+];*/
 
-export function getNewsPostBySlug(slug: string): NewsPost | undefined {
-  return newsPosts.find((p) => p.slug === slug);
+export async function getNewsPostBySlug(slug: string): Promise<NewsPost | undefined> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/news-posts?filters[slug][$eq]=${slug}&populate=tags`,
+    { next: { revalidate: 3600 } }
+  );
+  if (!res.ok) return undefined;
+  const json = await res.json();
+  if (!json.data?.length) return undefined;
+  const item = json.data[0];
+  return {
+    id: item.id,
+    slug: item.slug,
+    title_th: item.title ?? "",
+    title_en: item.title_en ?? "",
+    summary_th: item.summary ?? "",
+    summary_en: item.summary_en ?? "",
+    body: item.body ?? [],
+    body_en: item.body_en ?? [],
+    date: item.date ?? "",
+    tags: (item.tags ?? []).map((t: any) => t.name_en as NewsTag),
+    author: item.author ?? undefined,
+    readTimeMin: item.read_time_min ?? 1,
+  };
 }
 
-export function getRelatedPosts(
+export async function getRelatedPosts(
   currentSlug: string,
   tags: NewsTag[],
   limit = 3
-): NewsPost[] {
-  return newsPosts
-    .filter(
-      (p) =>
-        p.slug !== currentSlug && p.tags.some((t) => tags.includes(t))
-    )
+): Promise<NewsPost[]> {
+  const all = await getNewsPosts();
+  return all
+    .filter((p) => p.slug !== currentSlug && p.tags.some((t) => tags.includes(t)))
     .slice(0, limit);
 }
 

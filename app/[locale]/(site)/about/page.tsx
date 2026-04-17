@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BoardFilter } from "@/components/board-filter";
 import { Target, Eye, ListChecks, Check } from "lucide-react";
-import { getBoardMembers } from "@/lib/about-data";
+import { getBoardMembers, getMilestones } from "@/lib/about-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -34,7 +34,9 @@ export default async function AboutPage({ params }: PageProps) {
   const dict = getDictionary(locale as Locale);
   const isTh = locale === "th";
 
-  const timelineMilestones = [
+
+// mock data
+/*  const timelineMilestones = [
     {
       year: "2003",
       title: isTh ? "ก่อตั้งสมาคม ECTI" : "ECTI Association Founded",
@@ -84,7 +86,7 @@ export default async function AboutPage({ params }: PageProps) {
         ? "สมาคมเติบโตอย่างต่อเนื่องด้วยสมาชิกกว่า 3,000 คน และพันธมิตรนานาชาติ"
         : "The association continues to grow with 3,000+ members and international partnerships.",
     },
-  ];
+  ];*/
 
 /*  const boardMembers = [
     { name: isTh ? "ศ.ดร. ก. กิตติคุณ" : "Prof. Dr. A. Kittikun", role: isTh ? "นายกสมาคม" : "President", institution: isTh ? "มหาวิทยาลัย ก" : "University A", committee: "exec" as const, image: "/images/people/person-a.jpg" },
@@ -99,7 +101,16 @@ export default async function AboutPage({ params }: PageProps) {
     { name: isTh ? "ผศ.ดร. ญ. ญาณวุฒิ" : "Asst. Prof. Dr. J. Yanawut", role: isTh ? "ผู้ช่วยบรรณาธิการ" : "Associate Editor", institution: isTh ? "มหาวิทยาลัย ญ" : "University J", committee: "publications" as const, image: "/images/people/person-j.jpg" },
   ];*/
 
-  const rawMembers = await getBoardMembers();
+  const [rawMembers, rawMilestones] = await Promise.all([
+    getBoardMembers(),
+    getMilestones(),
+  ]);
+
+  const timelineMilestones = rawMilestones.map((m) => ({
+    year: m.year,
+    title: isTh ? m.title : m.title_en,
+    desc: isTh ? m.description : m.description_en,
+  }));
 
   const boardMembers = rawMembers.map((m) => ({
     name: isTh ? m.name : m.name_en,

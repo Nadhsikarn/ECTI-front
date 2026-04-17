@@ -32,3 +32,29 @@ export async function getBoardMembers(): Promise<BoardMember[]> {
     image: item.image ?? null,
   }));
 }
+
+export interface Milestone {
+  id: number;
+  year: string;
+  title: string;
+  title_en: string;
+  description: string;
+  description_en: string;
+}
+
+export async function getMilestones(): Promise<Milestone[]> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/milestones?sort=year:asc`,
+    { next: { revalidate: 3600 } }
+  );
+  if (!res.ok) return [];
+  const json = await res.json();
+  return json.data.map((item: any) => ({
+    id: item.id,
+    year: item.year,
+    title: item.title,
+    title_en: item.title_en,
+    description: item.description,
+    description_en: item.description_en,
+  }));
+}

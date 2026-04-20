@@ -6,10 +6,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { resourcesLinks, type Platform } from "@/lib/resources-links";
+import { resourcesLinks, type Platform, type ResourceLink } from "@/lib/resources-links";
 import type { Locale } from "@/lib/i18n";
 
 const PLATFORMS: Platform[] = ["YouTube", "LinkedIn", "Facebook"];
+
+const DEFAULT_CFG = {
+  icon: ExternalLink,
+  color: "text-muted-foreground",
+  badgeClass: "bg-muted text-muted-foreground border-border",
+};
 
 const platformConfig: Record<
   Platform,
@@ -44,26 +50,30 @@ interface KnowledgeLinksSectionProps {
     openOn: string;
     editorHint: string;
   };
+  initialResources?: ResourceLink[];
 }
 
 export function KnowledgeLinksSection({
   locale,
   labels,
+  initialResources,
 }: KnowledgeLinksSectionProps) {
   const [activePlatform, setActivePlatform] = useState<Platform | "all">("all");
+
+  const resources = initialResources && initialResources.length > 0 ? initialResources : resourcesLinks;
 
   const filtered = useMemo(() => {
     const items =
       activePlatform === "all"
-        ? [...resourcesLinks]
-        : resourcesLinks.filter((l) => l.platform === activePlatform);
+        ? [...resources]
+        : resources.filter((l) => l.platform === activePlatform);
 
     return items.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [activePlatform]);
+  }, [activePlatform, resources]);
 
-  function getTitle(item: (typeof resourcesLinks)[number]) {
+  function getTitle(item: ResourceLink) {
     if (locale === "en" && item.title_en) return item.title_en;
     return item.title_th;
   }
@@ -124,12 +134,13 @@ export function KnowledgeLinksSection({
 
       {/* Card grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((item) => {
-          const cfg = platformConfig[item.platform];
+        {filtered.map((item, i) => {
+          if (!item) return null;
+          const cfg = platformConfig[item.platform as Platform] || DEFAULT_CFG;
           const Icon = cfg.icon;
           return (
             <Card
-              key={item.url}
+              key={`${item.url}-${i}`}
               className="group border-border transition-shadow hover:shadow-md"
             >
               <CardContent className="flex h-full flex-col gap-3 p-5">

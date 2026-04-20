@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, Link2, Archive } from "lucide-react";
 import { KnowledgeLinksSection } from "@/components/knowledge-links-section";
+import { fetchResources } from "@/lib/resources-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -30,6 +31,8 @@ export default async function ResourcesPage({ params }: PageProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
+
+  const apiResources = await fetchResources();
 
   const sections = [
     {
@@ -73,6 +76,7 @@ export default async function ResourcesPage({ params }: PageProps) {
             openOn: dict.resources.knowledgeOpenOn,
             editorHint: dict.resources.knowledgeEditorHint,
           }}
+          initialResources={apiResources}
         />
 
         {/* Existing: Downloads / Links / Archive */}

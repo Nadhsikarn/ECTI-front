@@ -32,6 +32,12 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  fetchBenefits,
+  fetchHowToJoins,
+  fetchMemberTypes,
+  fetchQuestions,
+} from "@/lib/membership-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -58,20 +64,46 @@ export default async function MembershipPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
-  const steps = [
+  const [apiBenefits, apiHowToJoins, apiMemberTypes, apiQuestions] = await Promise.all([
+    fetchBenefits(),
+    fetchHowToJoins(),
+    fetchMemberTypes(),
+    fetchQuestions(),
+  ]);
+
+  const finalBenefits = apiBenefits.length > 0 
+    ? apiBenefits.map(b => b.Benefit)
+    : dict.membership.benefits;
+
+  const fallbackSteps = [
     { icon: FileText, title: dict.membership.step1Title, desc: dict.membership.step1Desc },
     { icon: CreditCard, title: dict.membership.step2Title, desc: dict.membership.step2Desc },
     { icon: Send, title: dict.membership.step3Title, desc: dict.membership.step3Desc },
     { icon: CheckCircle2, title: dict.membership.step4Title, desc: dict.membership.step4Desc },
   ];
 
-  const faqs = [
+  const finalSteps = apiHowToJoins.length > 0 
+    ? apiHowToJoins.map((s, idx) => ({
+        icon: fallbackSteps[idx % fallbackSteps.length]?.icon || CheckCircle2,
+        title: s.title,
+        desc: s.description,
+        customIconUrl: s.iconUrl
+      }))
+    : fallbackSteps.map(s => ({ ...s, customIconUrl: null }));
+
+  const fallbackFaqs = [
     { q: dict.membership.faq1Q, a: dict.membership.faq1A },
     { q: dict.membership.faq2Q, a: dict.membership.faq2A },
     { q: dict.membership.faq3Q, a: dict.membership.faq3A },
     { q: dict.membership.faq4Q, a: dict.membership.faq4A },
     { q: dict.membership.faq5Q, a: dict.membership.faq5A },
   ];
+
+  const finalFaqs = apiQuestions.length > 0 
+    ? apiQuestions.map(q => ({ q: q.Questions, a: q.answer }))
+    : fallbackFaqs;
+
+  const finalMemberTypes = apiMemberTypes.length > 0 ? apiMemberTypes : null;
 
   return (
     <>
@@ -90,7 +122,7 @@ export default async function MembershipPage({ params }: PageProps) {
             {dict.membership.benefitsTitle}
           </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {dict.membership.benefits.map((benefit, i) => (
+            {finalBenefits.map((benefit, i) => (
               <div
                 key={i}
                 className="flex items-start gap-3 rounded-lg border border-border bg-card p-5 transition-shadow hover:shadow-md"
@@ -133,75 +165,109 @@ export default async function MembershipPage({ params }: PageProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell className="px-4 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
-                          <GraduationCap className="h-5 w-5 text-chart-4" />
-                        </div>
-                        <span className="font-medium text-foreground">{dict.membership.typeStudent}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                      {dict.membership.eligibilityStudent}
-                    </TableCell>
-                    <TableCell className="px-4 py-4 text-center">
-                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                        {dict.membership.feeStudentAnnual}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-4 text-center">
-                      <Badge variant="outline" className="border-primary/30 text-primary">
-                        {dict.membership.feeStudentLifetime}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="px-4 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                          <Users className="h-5 w-5 text-primary" />
-                        </div>
-                        <span className="font-medium text-foreground">{dict.membership.typeProfessional}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                      {dict.membership.eligibilityProfessional}
-                    </TableCell>
-                    <TableCell className="px-4 py-4 text-center">
-                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                        {dict.membership.feeProfessionalAnnual}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-4 text-center">
-                      <Badge variant="outline" className="border-primary/30 text-primary">
-                        {dict.membership.feeProfessionalLifetime}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="px-4 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10">
-                          <Building2 className="h-5 w-5 text-accent" />
-                        </div>
-                        <span className="font-medium text-foreground">{dict.membership.typeInstitutional}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                      {dict.membership.eligibilityInstitutional}
-                    </TableCell>
-                    <TableCell className="px-4 py-4 text-center">
-                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                        {dict.membership.feeInstitutionalAnnual}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-4 text-center">
-                      <Badge variant="outline" className="border-primary/30 text-primary">
-                        {dict.membership.feeInstitutionalLifetime}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
+                  {finalMemberTypes ? (
+                    finalMemberTypes.map((type, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="px-4 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                              {type.iconUrl ? (
+                                <img src={type.iconUrl} alt={type.Type} className="h-5 w-5 object-contain" />
+                              ) : (
+                                <Users className="h-5 w-5 text-primary" />
+                              )}
+                            </div>
+                            <span className="font-medium text-foreground">{type.Type}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
+                          {type.Eligibility}
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                            {type.AnnualFee} THB
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="outline" className="border-primary/30 text-primary">
+                            {type.LifetimeFee} THB
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <>
+                      <TableRow>
+                        <TableCell className="px-4 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
+                              <GraduationCap className="h-5 w-5 text-chart-4" />
+                            </div>
+                            <span className="font-medium text-foreground">{dict.membership.typeStudent}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
+                          {dict.membership.eligibilityStudent}
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                            {dict.membership.feeStudentAnnual}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="outline" className="border-primary/30 text-primary">
+                            {dict.membership.feeStudentLifetime}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="px-4 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                              <Users className="h-5 w-5 text-primary" />
+                            </div>
+                            <span className="font-medium text-foreground">{dict.membership.typeProfessional}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
+                          {dict.membership.eligibilityProfessional}
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                            {dict.membership.feeProfessionalAnnual}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="outline" className="border-primary/30 text-primary">
+                            {dict.membership.feeProfessionalLifetime}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="px-4 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10">
+                              <Building2 className="h-5 w-5 text-accent" />
+                            </div>
+                            <span className="font-medium text-foreground">{dict.membership.typeInstitutional}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
+                          {dict.membership.eligibilityInstitutional}
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                            {dict.membership.feeInstitutionalAnnual}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 py-4 text-center">
+                          <Badge variant="outline" className="border-primary/30 text-primary">
+                            {dict.membership.feeInstitutionalLifetime}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -222,10 +288,14 @@ export default async function MembershipPage({ params }: PageProps) {
               style={{ width: "calc(75%)" }}
               aria-hidden="true"
             />
-            {steps.map((step, i) => (
+            {finalSteps.map((step, i) => (
               <div key={i} className="relative flex flex-col items-center text-center">
-                <div className="relative z-10 mb-4 flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary bg-card">
-                  <step.icon className="h-6 w-6 text-primary" />
+                <div className="relative z-10 mb-4 flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary bg-card overflow-hidden">
+                  {step.customIconUrl ? (
+                    <img src={step.customIconUrl} alt={step.title} className="h-6 w-6 object-contain" />
+                  ) : (
+                    <step.icon className="h-6 w-6 text-primary" />
+                  )}
                 </div>
                 <span className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {locale === "th" ? `ขั้นตอน ${i + 1}` : `Step ${i + 1}`}
@@ -251,7 +321,7 @@ export default async function MembershipPage({ params }: PageProps) {
           <Card className="border-border">
             <CardContent className="p-6">
               <Accordion type="single" collapsible className="w-full">
-                {faqs.map((faq, i) => (
+                {finalFaqs.map((faq, i) => (
                   <AccordionItem key={i} value={`faq-${i}`}>
                     <AccordionTrigger className="text-left text-base font-medium text-foreground">
                       {faq.q}

@@ -26,11 +26,56 @@ interface BoardFilterProps {
   };
 }
 
+function MemberCard({
+  member,
+  committeeColors,
+  committeeLabels,
+}: {
+  member: BoardMember;
+  committeeColors: Record<string, string>;
+  committeeLabels: Record<string, string>;
+}) {
+  return (
+    <Card className="border-border transition-shadow hover:shadow-md">
+      <CardContent className="flex items-start gap-4 p-5">
+        <Avatar className="h-14 w-14 shrink-0">
+          <AvatarImage
+            src={member.image}
+            alt={member.name}
+            className="object-cover"
+          />
+          <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
+            {member.name.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex min-w-0 flex-col gap-1">
+          <p className="truncate font-semibold text-foreground">{member.name}</p>
+          <p className="text-sm text-muted-foreground">{member.role}</p>
+          <p className="truncate text-xs text-muted-foreground">{member.institution}</p>
+          <Badge
+            variant="secondary"
+            className={`mt-1 w-fit text-xs ${committeeColors[member.committee] ?? ""}`}
+          >
+            {committeeLabels[member.committee]}
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function BoardFilter({ members, labels }: BoardFilterProps) {
   const [filter, setFilter] = useState<Committee>("all");
 
   const filtered =
     filter === "all" ? members : members.filter((m) => m.committee === filter);
+
+  const president = filtered.find(
+    (m) => m.role === "นายกสมาคม" || m.role === "President" || m.role === "ECTI President"
+  );
+  const others = filtered.filter(
+    (m) => m.role !== "นายกสมาคม" && m.role !== "President" && m.role !== "ECTI President"
+  );
 
   const filters: { key: Committee; label: string }[] = [
     { key: "all", label: labels.all },
@@ -72,41 +117,28 @@ export function BoardFilter({ members, labels }: BoardFilterProps) {
         ))}
       </div>
 
-      {/* Member grid */}
+      {/* นายกแถวแรกกลาง */}
+      {president && (
+        <div className="flex justify-center">
+          <div className="w-full sm:w-1/2 lg:w-1/3">
+            <MemberCard
+              member={president}
+              committeeColors={committeeColors}
+              committeeLabels={committeeLabels}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* คนอื่นๆ */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((member) => (
-          <Card
+        {others.map((member) => (
+          <MemberCard
             key={member.name}
-            className="border-border transition-shadow hover:shadow-md"
-          >
-            <CardContent className="flex items-start gap-4 p-5">
-              <Avatar className="h-14 w-14 shrink-0">
-                <AvatarImage
-                  src={member.image}
-                  alt={member.name}
-                  className="object-cover"
-                />
-                <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
-                  {member.name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex min-w-0 flex-col gap-1">
-                <p className="truncate font-semibold text-foreground">
-                  {member.name}
-                </p>
-                <p className="text-sm text-muted-foreground">{member.role}</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {member.institution}
-                </p>
-                <Badge
-                  variant="secondary"
-                  className={`mt-1 w-fit text-xs ${committeeColors[member.committee] ?? ""}`}
-                >
-                  {committeeLabels[member.committee]}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+            member={member}
+            committeeColors={committeeColors}
+            committeeLabels={committeeLabels}
+          />
         ))}
       </div>
     </div>

@@ -118,7 +118,7 @@ export default async function AboutPage({ params }: PageProps) {
     institution: isTh ? m.institution : m.institution_en,
     committee: m.committee,
     image: m.image
-      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${m.image.url}`
+      ? `${process.env.NEXT_PUBLIC_API_URL}${m.image.url}`
       : "/images/placeholder.jpg",
   }));
 

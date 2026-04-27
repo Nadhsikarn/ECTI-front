@@ -23,7 +23,7 @@ export interface NewsPost {
 export async function getNewsPosts(): Promise<NewsPost[]> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/news-posts?populate=tags&sort=date:desc`,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
   if (!res.ok) return [];
   const json = await res.json();
@@ -196,7 +196,7 @@ export async function getNewsPosts(): Promise<NewsPost[]> {
 export async function getNewsPostBySlug(slug: string): Promise<NewsPost | undefined> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/news-posts?filters[slug][$eq]=${slug}&populate=tags`,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
   if (!res.ok) return undefined;
   const json = await res.json();

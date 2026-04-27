@@ -13,7 +13,7 @@ export interface BoardMember {
 export async function getBoardMembers(): Promise<BoardMember[]> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/abouts?populate=image`,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   if (!res.ok) return [];
@@ -45,7 +45,7 @@ export interface Milestone {
 export async function getMilestones(): Promise<Milestone[]> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/milestones?sort=year:asc`,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
   if (!res.ok) return [];
   const json = await res.json();

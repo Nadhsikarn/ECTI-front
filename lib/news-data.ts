@@ -37,7 +37,7 @@ export async function getNewsPosts(): Promise<NewsPost[]> {
     body: item.body ?? [],
     body_en: item.body_en ?? [],
     date: item.date ?? "",
-    tags: (item.tags ?? []).map((t: any) => t.name_en as NewsTag),
+    tags: (item.tags ?? []).map((t: any) => t.name_en.toLowerCase() as NewsTag),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
   }));
@@ -212,7 +212,8 @@ export async function getNewsPostBySlug(slug: string): Promise<NewsPost | undefi
     body: item.body ?? [],
     body_en: item.body_en ?? [],
     date: item.date ?? "",
-    tags: (item.tags ?? []).map((t: any) => t.name_en as NewsTag),
+    // getNewsPosts
+    tags: (item.tags ?? []).map((t: any) => t.name_en.toLowerCase() as NewsTag),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
   };

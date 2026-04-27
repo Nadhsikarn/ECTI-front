@@ -42,6 +42,11 @@ export default async function PublicationsPage({ params }: PageProps) {
       description: dict.publications.journalCITDesc,
       icon: BookOpen,
     },
+    {
+      title: dict.publications.journalARD,
+      description: dict.publications.journalARDDesc,
+      icon: BookOpen,
+    },
   ];
 
   return (
@@ -59,7 +64,7 @@ export default async function PublicationsPage({ params }: PageProps) {
         <h2 className="mb-8 text-2xl font-bold text-foreground">
           {dict.publications.journalsTitle}
         </h2>
-        <div className="mb-16 grid gap-6 md:grid-cols-2">
+        <div className="mb-16 grid gap-6 md:grid-cols-3">
           {journals.map((journal) => (
             <Card
               key={journal.title}

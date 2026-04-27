@@ -28,7 +28,8 @@ const dictionaries = {
       joinNow: "สมัครสมาชิก",
     },
     home: {
-      heroTitle: "สมาคมวิชาการไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ โทรคมนาคม และสารสนเทศ",
+      heroTitle:
+        "สมาคมวิชาการไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ โทรคมนาคม และสารสนเทศ",
       heroSubtitle:
         "ส่งเสริมความก้าวหน้าทางวิชาการด้านวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ โทรคมนาคม สารสนเทศ และเทคโนโลยีที่เกี่ยวข้อง",
       heroPrimaryCta: "สมัครสมาชิก",
@@ -45,24 +46,30 @@ const dictionaries = {
       updateNewsLabel: "ข่าวล่าสุด",
       updateNewsTitle: "ECTI เปิดรับบทความ ECTI-CIT ฉบับพิเศษ",
       updateNewsDate: "15 ก.พ. 2569",
-      updateNewsDesc: "เปิดรับผลงานวิจัยด้านปัญญาประดิษฐ์ ประมวลผลภาพ และ IoT สำหรับฉบับพิเศษวารสาร ECTI-CIT",
+      updateNewsDesc:
+        "เปิดรับผลงานวิจัยด้านปัญญาประดิษฐ์ ประมวลผลภาพ และ IoT สำหรับฉบับพิเศษวารสาร ECTI-CIT",
       updateConferenceLabel: "การประชุมถัดไป",
       updateConferenceTitle: "ECTI-CON 2026",
       updateConferenceDate: "9–12 ก.ค. 2569",
-      updateConferenceDesc: "การประชุมวิชาการนานาชาติ ครั้งที่ 23 ณ จ.เชียงใหม่ หัวข้อ: AI, 6G, Quantum Computing",
+      updateConferenceDesc:
+        "การประชุมวิชาการนานาชาติ ครั้งที่ 23 ณ จ.เชียงใหม่ หัวข้อ: AI, 6G, Quantum Computing",
       updateCfpLabel: "Call for Papers",
       updateCfpTitle: "ECTI-CON 2026 — เปิดรับบทความแล้ว",
       updateCfpDate: "กำหนดส่ง: 30 เม.ย. 2569",
-      updateCfpDesc: "เชิญส่งบทความวิจัยในหัวข้อ AI, Robotics, IoT, 6G Communications และอื่นๆ",
+      updateCfpDesc:
+        "เชิญส่งบทความวิจัยในหัวข้อ AI, Robotics, IoT, 6G Communications และอื่นๆ",
       // What we do
       sectionWhatWeDo: "สิ่งที่เราทำ",
-      whatWeDoSubtitle: "ขับเคลื่อนนวัตกรรมด้านวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ โทรคมนาคม และสารสนเทศ",
+      whatWeDoSubtitle:
+        "ขับเคลื่อนนวัตกรรมด้านวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ โทรคมนาคม และสารสนเทศ",
       activityConference: "การประชุมวิชาการ",
-      activityConferenceDesc: "จัดประชุมวิชาการระดับชาติและนานาชาติเพื่อแลกเปลี่ยนองค์ความรู้",
+      activityConferenceDesc:
+        "จัดประชุมวิชาการระดับชาติและนานาชาติเพื่อแลกเปลี่ยนองค์ความรู้",
       activityJournal: "วารสารวิชาการ",
       activityJournalDesc: "ตีพิมพ์ผลงานวิจัยคุณภาพในวารสาร ECTI Transactions",
       activityNetwork: "เครือข่ายวิชาการ",
-      activityNetworkDesc: "สร้างเครือข่ายความร่วมมือระหว่างนักวิจัย อาจารย์ และภาคอุตสาหกรรม",
+      activityNetworkDesc:
+        "สร้างเครือข่ายความร่วมมือระหว่างนักวิจัย อาจารย์ และภาคอุตสาหกรรม",
       activityAward: "รางวัลวิชาการ",
       activityAwardDesc: "มอบรางวัลเพื่อยกย่องผลงานวิจัยและนักวิจัยดีเด่น",
       // Featured event
@@ -80,7 +87,8 @@ const dictionaries = {
       spotlightSubtitle: "ยกย่องผลงานของสมาชิก ECTI ที่สร้างคุณูปการแก่วงการ",
       // Newsletter
       sectionNewsletter: "รับข่าวสาร",
-      newsletterSubtitle: "สมัครรับจดหมายข่าวเพื่อรับข่าวสาร กิจกรรม และโอกาสใหม่ๆ จาก ECTI",
+      newsletterSubtitle:
+        "สมัครรับจดหมายข่าวเพื่อรับข่าวสาร กิจกรรม และโอกาสใหม่ๆ จาก ECTI",
       newsletterPlaceholder: "กรอกอีเมลของคุณ",
       newsletterButton: "สมัครรับข่าว",
       newsletterDisclaimer: "เราจะไม่ส่งสแปมให้คุณ สามารถยกเลิกได้ตลอดเวลา",
@@ -116,26 +124,35 @@ const dictionaries = {
       feeInstitutionalLifetime: "30,000 บาท",
       howToJoinTitle: "ขั้นตอนการสมัคร",
       step1Title: "กรอกใบสมัคร",
-      step1Desc: "ดาวน์โหลดใบสมัครจากเว็บไซต์ หรือกรอกแบบฟอร์มออนไลน์พร้อมข้อมูลส่วนตัวและสถาบันสังกัด",
+      step1Desc:
+        "ดาวน์โหลดใบสมัครจากเว็บไซต์ หรือกรอกแบบฟอร์มออนไลน์พร้อมข้อมูลส่วนตัวและสถาบันสังกัด",
       step2Title: "ชำระค่าธรรมเนียม",
-      step2Desc: "ชำระเงินผ่านการโอนเงินธนาคาร หรือชำระ ณ จุดลงทะเบียนในงานประชุม ECTI-CON",
+      step2Desc:
+        "ชำระเงินผ่านการโอนเงินธนาคาร หรือชำระ ณ จุดลงทะเบียนในงานประชุม ECTI-CON",
       step3Title: "ส่งหลักฐาน",
       step3Desc: "ส่งสำเนาใบสมัครและหลักฐานการชำระเงินทางอีเมล info@ecti.or.th",
       step4Title: "รับการยืนยัน",
-      step4Desc: "ทีมงานจะตรวจสอบข้อมูลและส่งอีเมลยืนยันพร้อมหมายเลขสมาชิกภายใน 7 วันทำการ",
+      step4Desc:
+        "ทีมงานจะตรวจสอบข้อมูลและส่งอีเมลยืนยันพร้อมหมายเลขสมาชิกภายใน 7 วันทำการ",
       faqTitle: "คำถามที่พบบ่อย",
       faq1Q: "สมาชิกประเภทนักศึกษาต้องมีหลักฐานอะไรบ้าง?",
-      faq1A: "นักศึกษาต้องแนบสำเนาบัตรนักศึกษา หรือหนังสือรับรองสถานภาพนักศึกษาจากสถาบันการศึกษา",
+      faq1A:
+        "นักศึกษาต้องแนบสำเนาบัตรนักศึกษา หรือหนังสือรับรองสถานภาพนักศึกษาจากสถาบันการศึกษา",
       faq2Q: "สามารถเปลี่ยนประเภทสมาชิกภายหลังได้หรือไม่?",
-      faq2A: "ได้ สมาชิกสามารถอัพเกรดประเภทสมาชิกได้ตลอดเวลา โดยชำระส่วนต่างค่าธรรมเนียม",
+      faq2A:
+        "ได้ สมาชิกสามารถอัพเกรดประเภทสมาชิกได้ตลอดเวลา โดยชำระส่วนต่างค่าธรรมเนียม",
       faq3Q: "สมาชิกตลอดชีพมีสิทธิ์อะไรเพิ่มเติม?",
-      faq3A: "สมาชิกตลอดชีพได้รับสิทธิ์เดียวกับสมาชิกรายปี โดยไม่ต้องต่ออายุสมาชิก และจะได้รับป้ายสมาชิกตลอดชีพพิเศษ",
+      faq3A:
+        "สมาชิกตลอดชีพได้รับสิทธิ์เดียวกับสมาชิกรายปี โดยไม่ต้องต่ออายุสมาชิก และจะได้รับป้ายสมาชิกตลอดชีพพิเศษ",
       faq4Q: "ค่าธรรมเนียมสมาชิกสามารถขอคืนได้หรือไม่?",
-      faq4A: "ค่าธรรมเนียมที่ชำระแล้วไม่สามารถขอคืนได้ แต่สามารถโอนสิทธิ์ให้ผู้อื่นภายในสถาบันเดียวกัน (สำหรับสมาชิกสถาบัน)",
+      faq4A:
+        "ค่าธรรมเนียมที่ชำระแล้วไม่สามารถขอคืนได้ แต่สามารถโอนสิทธิ์ให้ผู้อื่นภายในสถาบันเดียวกัน (สำหรับสมาชิกสถาบัน)",
       faq5Q: "สมาชิกต้องต่ออายุสมาชิกอย่างไร?",
-      faq5A: "สมาชิกรายปีจะได้รับการแจ้งเตือนทางอีเมลก่อนครบกำหนด 30 วัน สามารถต่ออายุโดยชำระค่าธรรมเนียมผ่านช่องทางเดิม",
+      faq5A:
+        "สมาชิกรายปีจะได้รับการแจ้งเตือนทางอีเมลก่อนครบกำหนด 30 วัน สามารถต่ออายุโดยชำระค่าธรรมเนียมผ่านช่องทางเดิม",
       ctaTitle: "พร้อมเข้าร่วมกับเราแล้วหรือยัง?",
-      ctaDesc: "สมัครสมาชิก ECTI วันนี้ เพื่อเชื่อมต่อกับชุมชนนักวิจัยและวิชาชีพชั้นนำของประเทศ",
+      ctaDesc:
+        "สมัครสมาชิก ECTI วันนี้ เพื่อเชื่อมต่อกับชุมชนนักวิจัยและวิชาชีพชั้นนำของประเทศ",
       ctaButton: "สมัครสมาชิกเลย",
     },
     events: {
@@ -255,20 +272,24 @@ const dictionaries = {
       title: "ผลงานตีพิมพ์",
       description: "วารสารวิชาการและผลงานตีพิมพ์ของสมาคม ECTI",
       journalsTitle: "วารสาร ECTI",
-      journalEEC: "ECTI Transactions on Electrical Eng., Electronics, and Communications (ECTI-EEC)",
-      journalEECDesc: "วารสารที่ครอบคลุมงานวิจัยด้านวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ และการสื่อสาร",
-      journalCIT: "ECTI Transactions on Computer and Information Technology (ECTI-CIT)",
-      journalCITDesc: "วารสารที่ครอบคลุมงานวิจัยด้านวิทยาการคอมพิวเตอร์และเทคโนโลยีสารสนเทศ",
+      journalEEC:"ECTI Transactions on Electrical Eng., Electronics, and Communications (ECTI-EEC)",
+      journalEECDesc:"วารสารที่ครอบคลุมงานวิจัยด้านวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ และการสื่อสาร",
+      journalCIT:"ECTI Transactions on Computer and Information Technology (ECTI-CIT)",
+      journalCITDesc:"วารสารที่ครอบคลุมงานวิจัยด้านวิทยาการคอมพิวเตอร์และเทคโนโลยีสารสนเทศ",
+      journalARD: "ECTI Journal on Applied Research and Development (ECTI-ARD)",
+      journalARDDesc:"วารสารที่ครอบคลุมงานวิจัยด้านการประยุกต์ใช้เทคโนโลยีวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ และสารสนเทศ เพื่อนำไปสู่นวัตกรรมที่เป็นประโยชน์",
       proceedingsTitle: "เอกสารการประชุมวิชาการ",
-      proceedingsText: "รวบรวมบทความวิจัยจากการประชุมวิชาการ ECTI-CON และงานประชุมอื่นๆ ที่จัดโดยสมาคม",
+      proceedingsText:"รวบรวมบทความวิจัยจากการประชุมวิชาการ ECTI-CON และงานประชุมอื่นๆ ที่จัดโดยสมาคม",
     },
     awards: {
       title: "รางวัล",
       description: "รางวัลและเกียรติคุณจากสมาคม ECTI",
       bestPaperTitle: "รางวัลบทความดีเด่น",
-      bestPaperText: "มอบให้กับบทความวิจัยที่มีคุณภาพดีเด่นในการประชุมวิชาการ ECTI-CON",
+      bestPaperText:
+        "มอบให้กับบทความวิจัยที่มีคุณภาพดีเด่นในการประชุมวิชาการ ECTI-CON",
       outstandingTitle: "รางวัลนักวิจัยดีเด่น",
-      outstandingText: "ยกย่องนักวิจัยที่มีผลงานวิจัยโดดเด่นในสาขาที่เกี่ยวข้อง",
+      outstandingText:
+        "ยกย่องนักวิจัยที่มีผลงานวิจัยโดดเด่นในสาขาที่เกี่ยวข้อง",
       serviceTitle: "รางวัลผู้ทำคุณประโยชน์",
       serviceText: "มอบให้แก่ผู้ที่ทุ่มเทเพื่อสมาคมและวงการวิชาการ",
     },
@@ -276,10 +297,12 @@ const dictionaries = {
       title: "แหล่งข้อมูล",
       description: "แหล่งข้อมูลและเอกสารที่เป็นประโยชน์",
       knowledgeTitle: "ความรู้ล่าสุดจากแพลตฟอร์ม",
-      knowledgeSubtitle: "รวมลิงก์ความรู้ บทความ และวิดีโอจาก YouTube, LinkedIn และ Facebook",
+      knowledgeSubtitle:
+        "รวมลิงก์ความรู้ บทความ และวิดีโอจาก YouTube, LinkedIn และ Facebook",
       knowledgeFilterAll: "ทั้งหมด",
       knowledgeOpenOn: "เปิดใน",
-      knowledgeEditorHint: "เพิ่มรายการใหม่: แก้ไขไฟล์ resourcesLinks ใน lib/resources-links.ts",
+      knowledgeEditorHint:
+        "เพิ่มรายการใหม่: แก้ไขไฟล์ resourcesLinks ใน lib/resources-links.ts",
       downloadsTitle: "เอกสารดาวน์โหลด",
       downloadsText: "แบบฟอร์ม เอกสารประกอบ และข้อมูลสำหรับสมาชิก",
       linksTitle: "ลิงก์ที่เกี่ยวข้อง",
@@ -333,26 +356,34 @@ const dictionaries = {
       updateNewsLabel: "Latest News",
       updateNewsTitle: "ECTI Opens Special Issue of ECTI-CIT",
       updateNewsDate: "Feb 15, 2026",
-      updateNewsDesc: "Now accepting research papers on AI, Image Processing, and IoT for a special issue of ECTI-CIT journal.",
+      updateNewsDesc:
+        "Now accepting research papers on AI, Image Processing, and IoT for a special issue of ECTI-CIT journal.",
       updateConferenceLabel: "Next Conference",
       updateConferenceTitle: "ECTI-CON 2026",
       updateConferenceDate: "Jul 9-12, 2026",
-      updateConferenceDesc: "The 23rd International Conference in Chiang Mai, Thailand. Topics: AI, 6G, Quantum Computing.",
+      updateConferenceDesc:
+        "The 23rd International Conference in Chiang Mai, Thailand. Topics: AI, 6G, Quantum Computing.",
       updateCfpLabel: "Call for Papers",
       updateCfpTitle: "ECTI-CON 2026 -- Now Accepting Papers",
       updateCfpDate: "Deadline: Apr 30, 2026",
-      updateCfpDesc: "Submit research papers on AI, Robotics, IoT, 6G Communications, and more.",
+      updateCfpDesc:
+        "Submit research papers on AI, Robotics, IoT, 6G Communications, and more.",
       // What we do
       sectionWhatWeDo: "What We Do",
-      whatWeDoSubtitle: "Driving innovation in Electrical Engineering, Electronics, Computer, Telecommunications, and Information Technology",
+      whatWeDoSubtitle:
+        "Driving innovation in Electrical Engineering, Electronics, Computer, Telecommunications, and Information Technology",
       activityConference: "Academic Conferences",
-      activityConferenceDesc: "Organizing national and international conferences for knowledge exchange.",
+      activityConferenceDesc:
+        "Organizing national and international conferences for knowledge exchange.",
       activityJournal: "Academic Journals",
-      activityJournalDesc: "Publishing quality research in ECTI Transactions journals.",
+      activityJournalDesc:
+        "Publishing quality research in ECTI Transactions journals.",
       activityNetwork: "Academic Network",
-      activityNetworkDesc: "Building collaborative networks among researchers, educators, and industry.",
+      activityNetworkDesc:
+        "Building collaborative networks among researchers, educators, and industry.",
       activityAward: "Academic Awards",
-      activityAwardDesc: "Recognizing outstanding research contributions and researchers.",
+      activityAwardDesc:
+        "Recognizing outstanding research contributions and researchers.",
       // Featured event
       sectionFeaturedEvent: "Featured Event",
       featuredEventTitle: "ECTI-CON 2026",
@@ -365,18 +396,19 @@ const dictionaries = {
       featuredEventRegCta: "Register",
       // Member spotlight
       sectionSpotlight: "Member Spotlight",
-      spotlightSubtitle: "Celebrating ECTI members making exceptional contributions to the field",
+      spotlightSubtitle:
+        "Celebrating ECTI members making exceptional contributions to the field",
       // Newsletter
       sectionNewsletter: "Stay Informed",
-      newsletterSubtitle: "Subscribe to our newsletter for the latest news, events, and opportunities from ECTI",
+      newsletterSubtitle:
+        "Subscribe to our newsletter for the latest news, events, and opportunities from ECTI",
       newsletterPlaceholder: "Enter your email",
       newsletterButton: "Subscribe",
       newsletterDisclaimer: "We respect your privacy. Unsubscribe at any time.",
     },
     membership: {
       title: "Membership",
-      description:
-        "Join ECTI to access exclusive benefits and opportunities.",
+      description: "Join ECTI to access exclusive benefits and opportunities.",
       benefitsTitle: "Member Benefits",
       benefits: [
         "Discounted registration for ECTI-CON conferences",
@@ -394,9 +426,12 @@ const dictionaries = {
       colEligibility: "Eligibility",
       colAnnualFee: "Annual Fee",
       colLifetimeFee: "Lifetime Fee",
-      eligibilityStudent: "Undergraduate, Master's, or Doctoral students in related fields",
-      eligibilityProfessional: "Professionals working in or interested in related fields",
-      eligibilityInstitutional: "Universities, research institutes, or industry organizations",
+      eligibilityStudent:
+        "Undergraduate, Master's, or Doctoral students in related fields",
+      eligibilityProfessional:
+        "Professionals working in or interested in related fields",
+      eligibilityInstitutional:
+        "Universities, research institutes, or industry organizations",
       feeStudentAnnual: "200 THB",
       feeStudentLifetime: "1,000 THB",
       feeProfessionalAnnual: "500 THB",
@@ -405,26 +440,36 @@ const dictionaries = {
       feeInstitutionalLifetime: "30,000 THB",
       howToJoinTitle: "How to Join",
       step1Title: "Fill Out Application",
-      step1Desc: "Download the application form or fill out the online form with your personal and institutional details.",
+      step1Desc:
+        "Download the application form or fill out the online form with your personal and institutional details.",
       step2Title: "Pay Membership Fee",
-      step2Desc: "Pay via bank transfer or in-person at ECTI-CON conference registration desk.",
+      step2Desc:
+        "Pay via bank transfer or in-person at ECTI-CON conference registration desk.",
       step3Title: "Submit Documents",
-      step3Desc: "Email your completed application and proof of payment to info@ecti.or.th.",
+      step3Desc:
+        "Email your completed application and proof of payment to info@ecti.or.th.",
       step4Title: "Receive Confirmation",
-      step4Desc: "Our team will verify your information and send a confirmation email with your member ID within 7 business days.",
+      step4Desc:
+        "Our team will verify your information and send a confirmation email with your member ID within 7 business days.",
       faqTitle: "Frequently Asked Questions",
       faq1Q: "What documents are required for student membership?",
-      faq1A: "Students must provide a copy of their student ID or an enrollment certificate from their institution.",
+      faq1A:
+        "Students must provide a copy of their student ID or an enrollment certificate from their institution.",
       faq2Q: "Can I change my membership type later?",
-      faq2A: "Yes, members can upgrade their membership type at any time by paying the fee difference.",
+      faq2A:
+        "Yes, members can upgrade their membership type at any time by paying the fee difference.",
       faq3Q: "What additional benefits do lifetime members receive?",
-      faq3A: "Lifetime members receive the same benefits as annual members without renewal. They also receive a special lifetime member badge.",
+      faq3A:
+        "Lifetime members receive the same benefits as annual members without renewal. They also receive a special lifetime member badge.",
       faq4Q: "Is the membership fee refundable?",
-      faq4A: "Fees are non-refundable but can be transferred to another person within the same institution (for institutional members).",
+      faq4A:
+        "Fees are non-refundable but can be transferred to another person within the same institution (for institutional members).",
       faq5Q: "How do I renew my membership?",
-      faq5A: "Annual members receive an email reminder 30 days before expiration. You can renew through the same payment channels.",
+      faq5A:
+        "Annual members receive an email reminder 30 days before expiration. You can renew through the same payment channels.",
       ctaTitle: "Ready to Join?",
-      ctaDesc: "Join ECTI today and connect with Thailand's leading research and professional community.",
+      ctaDesc:
+        "Join ECTI today and connect with Thailand's leading research and professional community.",
       ctaButton: "Apply for Membership",
     },
     events: {
@@ -536,7 +581,8 @@ const dictionaries = {
       formSubject: "Subject",
       formMessage: "Message",
       formSend: "Send Message",
-      formSuccess: "Message sent successfully! Our team will respond within 2 business days.",
+      formSuccess:
+        "Message sent successfully! Our team will respond within 2 business days.",
       mapTitle: "Location",
       socialTitle: "Follow Us",
     },
@@ -544,31 +590,44 @@ const dictionaries = {
       title: "Publications",
       description: "Academic journals and publications by ECTI Association",
       journalsTitle: "ECTI Journals",
-      journalEEC: "ECTI Transactions on Electrical Eng., Electronics, and Communications (ECTI-EEC)",
-      journalEECDesc: "A journal covering research in electrical engineering, electronics, and communications.",
-      journalCIT: "ECTI Transactions on Computer and Information Technology (ECTI-CIT)",
-      journalCITDesc: "A journal covering research in computer science and information technology.",
+      journalEEC:
+        "ECTI Transactions on Electrical Eng., Electronics, and Communications (ECTI-EEC)",
+      journalEECDesc:
+        "A journal covering research in electrical engineering, electronics, and communications.",
+      journalCIT:
+        "ECTI Transactions on Computer and Information Technology (ECTI-CIT)",
+      journalCITDesc:
+        "A journal covering research in computer science and information technology.",
+      journalARD: "ECTI Journal on Applied Research and Development (ECTI-ARD)",
+      journalARDDesc:
+        "A journal covering applied research in electrical engineering, electronics, computer, and information technology, driving innovation for practical benefit.",
       proceedingsTitle: "Conference Proceedings",
-      proceedingsText: "Collection of research papers from ECTI-CON and other conferences organized by the association.",
+      proceedingsText:
+        "Collection of research papers from ECTI-CON and other conferences organized by the association.",
     },
     awards: {
       title: "Awards",
       description: "Awards and honors from ECTI Association",
       bestPaperTitle: "Best Paper Award",
-      bestPaperText: "Presented to outstanding research papers at the ECTI-CON conference.",
+      bestPaperText:
+        "Presented to outstanding research papers at the ECTI-CON conference.",
       outstandingTitle: "Outstanding Researcher Award",
-      outstandingText: "Recognizing researchers with exceptional contributions in related fields.",
+      outstandingText:
+        "Recognizing researchers with exceptional contributions in related fields.",
       serviceTitle: "Distinguished Service Award",
-      serviceText: "Awarded to individuals who have made significant contributions to the association and academia.",
+      serviceText:
+        "Awarded to individuals who have made significant contributions to the association and academia.",
     },
     resources: {
       title: "Resources",
       description: "Useful resources and documents",
       knowledgeTitle: "Latest Knowledge from Platforms",
-      knowledgeSubtitle: "Curated links, articles, and videos from YouTube, LinkedIn, and Facebook",
+      knowledgeSubtitle:
+        "Curated links, articles, and videos from YouTube, LinkedIn, and Facebook",
       knowledgeFilterAll: "All",
       knowledgeOpenOn: "Open on",
-      knowledgeEditorHint: "To add items, edit the resourcesLinks array in lib/resources-links.ts",
+      knowledgeEditorHint:
+        "To add items, edit the resourcesLinks array in lib/resources-links.ts",
       downloadsTitle: "Downloads",
       downloadsText: "Forms, documents, and information for members.",
       linksTitle: "Related Links",

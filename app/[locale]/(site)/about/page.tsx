@@ -118,7 +118,7 @@ export default async function AboutPage({ params }: PageProps) {
     institution: isTh ? m.institution : m.institution_en,
     committee: m.committee,
     image: m.image
-      ? `${process.env.NEXT_PUBLIC_API_URL}${m.image.url}`
+      ? m.image.url  // ใช้ URL ตรงๆ เลย ไม่ต้องต่อ env
       : "/images/placeholder.jpg",
   }));
 

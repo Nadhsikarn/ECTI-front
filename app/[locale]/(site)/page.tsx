@@ -50,7 +50,7 @@ export default async function HomePage({ params }: PageProps) {
       <FeaturedUpdatesSection locale={locale as Locale} dict={dict} />
       <ActivitiesSection dict={dict} />
       <FeaturedEventSection locale={locale as Locale} dict={dict} />
-      <MemberSpotlightSection locale={locale as Locale} dict={dict} />
+      {/*<MemberSpotlightSection locale={locale as Locale} dict={dict} />*/}
       <NewsletterSection dict={dict} />
     </>
   );

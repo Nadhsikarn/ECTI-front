@@ -58,3 +58,61 @@ export async function getMilestones(): Promise<Milestone[]> {
     description_en: item.description_en,
   }));
 }
+
+export interface AboutCard {
+  id: number;
+  title_th: string;
+  title_en: string;
+  description_th: string;
+  description_en: string;
+}
+
+export async function getMissionVisionCards(): Promise<AboutCard[]> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/mission-vision?populate=cards`,
+      { next: { revalidate: 0 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    const data = json.data;
+    const cards = data?.cards ?? data?.attributes?.cards ?? [];
+    return cards.map((item: any) => ({
+      id: item.id,
+      title_th: item.title_th ?? "",
+      title_en: item.title_en ?? "",
+      description_th: item.description_th ?? "",
+      description_en: item.description_en ?? "",
+    }));
+  } catch (error) {
+    console.error("Error fetching mission-vision cards:", error);
+    return [];
+  }
+}
+
+export interface ObjectiveItem {
+  id: number;
+  text_th: string;
+  text_en: string;
+}
+
+export async function getObjectives(): Promise<ObjectiveItem[]> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/objective?populate=items`,
+      { next: { revalidate: 0 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    const data = json.data;
+    const items = data?.items ?? data?.attributes?.items ?? [];
+    return items.map((item: any) => ({
+      id: item.id,
+      text_th: item.text_th ?? "",
+      text_en: item.text_en ?? "",
+    }));
+  } catch (error) {
+    console.error("Error fetching objectives:", error);
+    return [];
+  }
+}

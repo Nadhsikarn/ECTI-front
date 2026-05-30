@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BoardFilter } from "@/components/board-filter";
 import { Target, Eye, ListChecks, Check } from "lucide-react";
-import { getBoardMembers, getMilestones } from "@/lib/about-data";
+import { getBoardMembers, getMilestones, getMissionVisionCards, getObjectives } from "@/lib/about-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -101,9 +101,11 @@ export default async function AboutPage({ params }: PageProps) {
     { name: isTh ? "ผศ.ดร. ญ. ญาณวุฒิ" : "Asst. Prof. Dr. J. Yanawut", role: isTh ? "ผู้ช่วยบรรณาธิการ" : "Associate Editor", institution: isTh ? "มหาวิทยาลัย ญ" : "University J", committee: "publications" as const, image: "/images/people/person-j.jpg" },
   ];*/
 
-  const [rawMembers, rawMilestones] = await Promise.all([
+  const [rawMembers, rawMilestones, rawCards, rawObjectives] = await Promise.all([
     getBoardMembers(),
     getMilestones(),
+    getMissionVisionCards(),
+    getObjectives(),
   ]);
 
   const timelineMilestones = rawMilestones.map((m) => ({
@@ -122,6 +124,33 @@ export default async function AboutPage({ params }: PageProps) {
       : "/images/placeholder.jpg",
   }));
 
+  // Fallback to dictionary values if Strapi returns empty or fails
+
+  const cards = rawCards.length > 0
+    ? rawCards.map((c) => ({
+        title: isTh ? c.title_th : c.title_en,
+        desc: isTh ? c.description_th : c.description_en,
+      }))
+    : [
+        {
+          title: dict.about.missionTitle,
+          desc: dict.about.missionText,
+        },
+        {
+          title: dict.about.visionTitle,
+          desc: dict.about.visionText,
+        },
+      ];
+
+  const objectives = rawObjectives.length > 0
+    ? rawObjectives.map((o) => (isTh ? o.text_th : o.text_en))
+    : dict.about.objectives;
+
+  const cardConfig = [
+    { icon: Target, colorClass: "bg-primary/10 text-primary" },
+    { icon: Eye, colorClass: "bg-accent/10 text-accent" },
+  ];
+
   return (
     <>
       <PageHeader
@@ -135,34 +164,25 @@ export default async function AboutPage({ params }: PageProps) {
       <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
         {/* --- Mission & Vision --- */}
         <section className="mb-20 grid gap-8 lg:grid-cols-2">
-          {/* Mission */}
-          <Card className="border-border">
-            <CardContent className="flex flex-col gap-4 p-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Target className="h-6 w-6 text-primary" />
-              </div>
-              <h2 className="text-xl font-bold text-foreground">
-                {dict.about.missionTitle}
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                {dict.about.missionText}
-              </p>
-            </CardContent>
-          </Card>
-          {/* Vision */}
-          <Card className="border-border">
-            <CardContent className="flex flex-col gap-4 p-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
-                <Eye className="h-6 w-6 text-accent" />
-              </div>
-              <h2 className="text-xl font-bold text-foreground">
-                {dict.about.visionTitle}
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                {dict.about.visionText}
-              </p>
-            </CardContent>
-          </Card>
+          {cards.map((card, index) => {
+            const config = cardConfig[index] || { icon: Target, colorClass: "bg-primary/10 text-primary" };
+            const IconComponent = config.icon;
+            return (
+              <Card key={index} className="border-border">
+                <CardContent className="flex flex-col gap-4 p-6">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${config.colorClass}`}>
+                    <IconComponent className="h-6 w-6" />
+                  </div>
+                  <h2 className="text-xl font-bold text-foreground">
+                    {card.title}
+                  </h2>
+                  <p className="leading-relaxed text-muted-foreground">
+                    {card.desc}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </section>
 
         {/* --- Objectives --- */}
@@ -176,9 +196,9 @@ export default async function AboutPage({ params }: PageProps) {
             </h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {dict.about.objectives.map((obj) => (
+            {objectives.map((obj, index) => (
               <div
-                key={obj}
+                key={index}
                 className="flex items-start gap-3 rounded-lg border border-border bg-card p-4"
               >
                 <Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" />

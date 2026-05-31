@@ -22,7 +22,7 @@ export interface NewsPost {
 
 export async function getNewsPosts(): Promise<NewsPost[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/news-posts?populate=tags&sort=date:desc`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/news-posts?populate=tags&sort=publishedAt:desc`,
     { next: { revalidate: 0 } }
   );
   if (!res.ok) return [];
@@ -36,7 +36,7 @@ export async function getNewsPosts(): Promise<NewsPost[]> {
     summary_en: item.summary_en ?? "",
     body: item.body ?? [],
     body_en: item.body_en ?? [],
-    date: item.date ?? "",
+    date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
     tags: (item.tags ?? []).map((t: any) => t.name_en.toLowerCase() as NewsTag),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
@@ -211,7 +211,7 @@ export async function getNewsPostBySlug(slug: string): Promise<NewsPost | undefi
     summary_en: item.summary_en ?? "",
     body: item.body ?? [],
     body_en: item.body_en ?? [],
-    date: item.date ?? "",
+    date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
     // getNewsPosts
     tags: (item.tags ?? []).map((t: any) => t.name_en.toLowerCase() as NewsTag),
     author: item.author ?? undefined,

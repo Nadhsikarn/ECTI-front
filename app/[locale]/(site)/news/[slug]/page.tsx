@@ -68,6 +68,33 @@ function getTagStyle(tag: NewsTag): string {
   }
 }
 
+// Recursive child node renderer
+function RenderChild({ child }: { child: any }) {
+  if (child.type === "link") {
+    return (
+      <a
+        href={child.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary underline hover:text-primary/80 transition-colors"
+      >
+        {child.children?.map((c: any, idx: number) => (
+          <RenderChild key={idx} child={c} />
+        ))}
+      </a>
+    );
+  }
+
+  const text = child.text ?? "";
+  return (
+    <span
+      className={`${child.bold ? "font-semibold" : ""} ${child.italic ? "italic" : ""} ${child.underline ? "underline" : ""} ${child.strikethrough ? "line-through" : ""}`}
+    >
+      {text}
+    </span>
+  );
+}
+
 // Rich text blocks renderer
 function RichTextRenderer({ blocks }: { blocks: any[] }) {
   if (!blocks?.length) return null;
@@ -77,21 +104,18 @@ function RichTextRenderer({ blocks }: { blocks: any[] }) {
         switch (block.type) {
           case "paragraph":
             return (
-              <p key={i} className="mb-4 text-sm leading-relaxed text-foreground/90">
+              <p key={i} className="mb-4 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
                 {block.children?.map((child: any, j: number) => (
-                  <span
-                    key={j}
-                    className={`${child.bold ? "font-semibold" : ""} ${child.italic ? "italic" : ""} ${child.underline ? "underline" : ""}`}
-                  >
-                    {child.text}
-                  </span>
+                  <RenderChild key={j} child={child} />
                 ))}
               </p>
             );
           case "heading":
             return (
               <h3 key={i} className="mt-6 mb-2 text-base font-semibold text-foreground">
-                {block.children?.map((child: any) => child.text).join("")}
+                {block.children?.map((child: any, j: number) => (
+                  <RenderChild key={j} child={child} />
+                ))}
               </h3>
             );
           case "list":
@@ -100,10 +124,22 @@ function RichTextRenderer({ blocks }: { blocks: any[] }) {
                 {block.children?.map((item: any, j: number) => (
                   <li key={j} className="flex items-start gap-2 text-sm leading-relaxed text-foreground">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    <span>{item.children?.map((child: any) => child.text).join("")}</span>
+                    <span>
+                      {item.children?.map((child: any, idx: number) => (
+                        <RenderChild key={idx} child={child} />
+                      ))}
+                    </span>
                   </li>
                 ))}
               </ul>
+            );
+          case "quote":
+            return (
+              <blockquote key={i} className="my-4 border-l-4 border-primary pl-4 italic text-muted-foreground whitespace-pre-wrap">
+                {block.children?.map((child: any, j: number) => (
+                  <RenderChild key={j} child={child} />
+                ))}
+              </blockquote>
             );
           default:
             return null;

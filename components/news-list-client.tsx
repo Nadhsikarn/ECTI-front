@@ -49,7 +49,7 @@ export function NewsListClient({
     "cfp",
     "awards",
     "publications",
-    "community",
+    "article",
   ];
 
   const filtered = useMemo(() => {

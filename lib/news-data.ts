@@ -3,7 +3,7 @@ export type NewsTag =
   | "cfp"
   | "awards"
   | "publications"
-  | "community";
+  | "article";
 
 export interface NewsPost {
   id: number;
@@ -231,5 +231,5 @@ export async function getRelatedPosts(
 }
 
 export function getAllTags(): NewsTag[] {
-  return ["announcements", "cfp", "awards", "publications", "community"];
+  return ["announcements", "cfp", "awards", "publications", "article"];
 }

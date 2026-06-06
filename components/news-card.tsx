@@ -11,7 +11,7 @@ export function getTagLabel(tag: NewsTag, dict: Dictionary): string {
     cfp: dict.news.tagCfp,
     awards: dict.news.tagAwards,
     publications: dict.news.tagPublications,
-    community: dict.news.tagCommunity,
+    article: dict.news.tagArticle,
   };
   return map[tag];
 }
@@ -26,7 +26,7 @@ export function getTagStyle(tag: NewsTag): string {
       return "bg-chart-5/10 text-chart-5 border-chart-5/20";
     case "publications":
       return "bg-chart-4/10 text-chart-4 border-chart-4/20";
-    case "community":
+    case "article":
       return "bg-chart-3/10 text-chart-3 border-chart-3/20";
   }
 }

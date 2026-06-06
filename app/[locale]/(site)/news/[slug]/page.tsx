@@ -53,7 +53,7 @@ function getTagLabel(tag: NewsTag, dict: ReturnType<typeof getDictionary>): stri
     cfp: dict.news.tagCfp,
     awards: dict.news.tagAwards,
     publications: dict.news.tagPublications,
-    community: dict.news.tagCommunity,
+    article: dict.news.tagArticle,
   };
   return map[tag];
 }
@@ -64,7 +64,7 @@ function getTagStyle(tag: NewsTag): string {
     case "cfp": return "bg-accent/10 text-accent border-accent/20";
     case "awards": return "bg-chart-5/10 text-chart-5 border-chart-5/20";
     case "publications": return "bg-chart-4/10 text-chart-4 border-chart-4/20";
-    case "community": return "bg-chart-3/10 text-chart-3 border-chart-3/20";
+    case "article": return "bg-chart-3/10 text-chart-3 border-chart-3/20";
   }
 }
 
@@ -110,14 +110,21 @@ function RichTextRenderer({ blocks }: { blocks: any[] }) {
                 ))}
               </p>
             );
-          case "heading":
+          case "heading": {
+            const level = block.level ?? 2;
+            const headingClass =
+              level === 1 ? "mt-8 mb-3 text-2xl font-bold text-foreground" :
+              level === 2 ? "mt-7 mb-2 text-xl font-bold text-foreground" :
+                            "mt-6 mb-2 text-lg font-semibold text-foreground";
+            const Tag = `h${level}` as "h1" | "h2" | "h3";
             return (
-              <h3 key={i} className="mt-6 mb-2 text-base font-semibold text-foreground">
+              <Tag key={i} className={headingClass}>
                 {block.children?.map((child: any, j: number) => (
                   <RenderChild key={j} child={child} />
                 ))}
-              </h3>
+              </Tag>
             );
+          }
           case "list":
             return (
               <ul key={i} className="mb-4 flex flex-col gap-1">

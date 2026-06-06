@@ -12,7 +12,6 @@ import {
   Clock,
   User,
   CalendarDays,
-  Share2,
   Tag,
 } from "lucide-react";
 import {
@@ -21,6 +20,7 @@ import {
   getRelatedPosts,
 } from "@/lib/news-data";
 import type { NewsTag } from "@/lib/news-data";
+import { NewsShareButton } from "@/components/news-share-button";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -230,10 +230,10 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
             <Separator className="my-8" />
 
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <Share2 className="h-4 w-4" />
-              <span className="font-medium">{dict.news.shareArticle}</span>
-            </div>
+            <NewsShareButton
+              label={dict.news.shareArticle}
+              copiedLabel={dict.news.copied}
+            />
           </article>
 
           <aside className="flex flex-col gap-6">

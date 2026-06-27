@@ -29,3 +29,9 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# package manager
+package-lock.json
+
+# typescript
+tsconfig.tsbuildinfo

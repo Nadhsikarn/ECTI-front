@@ -14,7 +14,6 @@ const dictionaries = {
       membership: "สมาชิก",
       events: "กิจกรรม",
       publications: "ผลงานตีพิมพ์",
-      awards: "รางวัล",
       news: "ข่าวสาร",
       resources: "แหล่งข้อมูล",
       contact: "ติดต่อเรา",
@@ -281,18 +280,6 @@ const dictionaries = {
       proceedingsTitle: "เอกสารการประชุมวิชาการ",
       proceedingsText:"รวบรวมบทความวิจัยจากการประชุมวิชาการ ECTI-CON และงานประชุมอื่นๆ ที่จัดโดยสมาคม",
     },
-    awards: {
-      title: "รางวัล",
-      description: "รางวัลและเกียรติคุณจากสมาคม ECTI",
-      bestPaperTitle: "รางวัลบทความดีเด่น",
-      bestPaperText:
-        "มอบให้กับบทความวิจัยที่มีคุณภาพดีเด่นในการประชุมวิชาการ ECTI-CON",
-      outstandingTitle: "รางวัลนักวิจัยดีเด่น",
-      outstandingText:
-        "ยกย่องนักวิจัยที่มีผลงานวิจัยโดดเด่นในสาขาที่เกี่ยวข้อง",
-      serviceTitle: "รางวัลผู้ทำคุณประโยชน์",
-      serviceText: "มอบให้แก่ผู้ที่ทุ่มเทเพื่อสมาคมและวงการวิชาการ",
-    },
     resources: {
       title: "แหล่งข้อมูล",
       description: "แหล่งข้อมูลและเอกสารที่เป็นประโยชน์",
@@ -325,7 +312,6 @@ const dictionaries = {
       membership: "Membership",
       events: "Events",
       publications: "Publications",
-      awards: "Awards",
       news: "News",
       resources: "Resources",
       contact: "Contact",
@@ -604,19 +590,6 @@ const dictionaries = {
       proceedingsTitle: "Conference Proceedings",
       proceedingsText:
         "Collection of research papers from ECTI-CON and other conferences organized by the association.",
-    },
-    awards: {
-      title: "Awards",
-      description: "Awards and honors from ECTI Association",
-      bestPaperTitle: "Best Paper Award",
-      bestPaperText:
-        "Presented to outstanding research papers at the ECTI-CON conference.",
-      outstandingTitle: "Outstanding Researcher Award",
-      outstandingText:
-        "Recognizing researchers with exceptional contributions in related fields.",
-      serviceTitle: "Distinguished Service Award",
-      serviceText:
-        "Awarded to individuals who have made significant contributions to the association and academia.",
     },
     resources: {
       title: "Resources",

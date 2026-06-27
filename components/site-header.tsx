@@ -50,7 +50,6 @@ export function SiteHeader({ locale, dict }: SiteHeaderProps) {
     { label: dict.nav.membership, href: `/${locale}/membership` },
     { label: dict.nav.events, href: `/${locale}/events` },
     { label: dict.nav.publications, href: `/${locale}/publications` },
-    { label: dict.nav.awards, href: `/${locale}/awards` },
     { label: dict.nav.news, href: `/${locale}/news` },
     { label: dict.nav.resources, href: `/${locale}/resources` },
     { label: dict.nav.contact, href: `/${locale}/contact` },

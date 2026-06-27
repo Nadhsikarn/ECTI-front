@@ -92,6 +92,10 @@ const dictionaries = {
       newsletterPlaceholder: "กรอกอีเมลของคุณ",
       newsletterButton: "สมัครรับข่าว",
       newsletterDisclaimer: "เราจะไม่ส่งสแปมให้คุณ สามารถยกเลิกได้ตลอดเวลา",
+      newsletterSuccess: "สมัครรับข่าวสารเรียบร้อยแล้ว ขอบคุณค่ะ",
+      newsletterDuplicate: "อีเมลนี้สมัครรับข่าวไว้แล้ว",
+      newsletterInvalid: "กรุณากรอกอีเมลให้ถูกต้อง",
+      newsletterError: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
     },
     membership: {
       title: "การสมัครสมาชิก",
@@ -405,6 +409,10 @@ const dictionaries = {
       newsletterPlaceholder: "Enter your email",
       newsletterButton: "Subscribe",
       newsletterDisclaimer: "We respect your privacy. Unsubscribe at any time.",
+      newsletterSuccess: "You're subscribed. Thank you!",
+      newsletterDuplicate: "This email is already subscribed.",
+      newsletterInvalid: "Please enter a valid email address.",
+      newsletterError: "Something went wrong. Please try again.",
     },
     membership: {
       title: "Membership",

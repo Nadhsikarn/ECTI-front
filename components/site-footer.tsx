@@ -20,7 +20,6 @@ export function SiteFooter({ locale, dict }: SiteFooterProps) {
   ];
 
   const quickLinksCol2 = [
-    { label: dict.nav.awards, href: `/${locale}/awards` },
     { label: dict.nav.news, href: `/${locale}/news` },
     { label: dict.nav.resources, href: `/${locale}/resources` },
     { label: dict.nav.contact, href: `/${locale}/contact` },

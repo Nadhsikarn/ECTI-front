@@ -17,7 +17,6 @@ export async function FeaturedEventSection({ locale, dict }: FeaturedEventSectio
   if (!event) return null;
 
   const eventsHref = `/${locale}/events`;
-  const isExternalReg = event.registerUrl.startsWith("http");
 
   return (
     <section className="bg-background py-16 lg:py-24">
@@ -88,23 +87,10 @@ export async function FeaturedEventSection({ locale, dict }: FeaturedEventSectio
               <div className="flex flex-wrap gap-3">
                 <Link href={eventsHref}>
                   <Button className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
-                    {dict.home.featuredEventCta}
+                    {dict.events.btnDetails}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
-                {isExternalReg ? (
-                  <a href={event.registerUrl} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" className="gap-2">
-                      {dict.home.featuredEventRegCta}
-                    </Button>
-                  </a>
-                ) : (
-                  <Link href={eventsHref}>
-                    <Button variant="outline" className="gap-2">
-                      {dict.home.featuredEventRegCta}
-                    </Button>
-                  </Link>
-                )}
               </div>
             </div>
           </div>

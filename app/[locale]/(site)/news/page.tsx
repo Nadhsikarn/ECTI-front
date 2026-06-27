@@ -29,7 +29,7 @@ export default async function NewsPage({ params }: PageProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
-  const posts = await getNewsPosts();
+  const posts = await getNewsPosts(locale);
 
   return (
     <>

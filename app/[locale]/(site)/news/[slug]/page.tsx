@@ -27,7 +27,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const posts = await getNewsPosts();
+  const posts = await getNewsPosts("th");
   return posts.flatMap((post) => [
     { locale: "th", slug: post.slug },
     { locale: "en", slug: post.slug },
@@ -37,13 +37,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { locale, slug } = await params;
   if (!isValidLocale(locale)) return {};
-  const post = await getNewsPostBySlug(slug);
+  const post = await getNewsPostBySlug(slug, locale);
   if (!post) return {};
-  const isTh = locale === "th";
   const dict = getDictionary(locale as Locale);
   return {
-    title: `${isTh ? post.title_th : post.title_en} | ${dict.news.title}`,
-    description: isTh ? post.summary_th : post.summary_en,
+    title: `${post.title} | ${dict.news.title}`,
+    description: post.summary,
   };
 }
 
@@ -159,21 +158,21 @@ function RichTextRenderer({ blocks }: { blocks: any[] }) {
 export default async function NewsDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   if (!isValidLocale(locale)) notFound();
-  const post = await getNewsPostBySlug(slug);
+  const post = await getNewsPostBySlug(slug, locale);
   if (!post) notFound();
 
   const dict = getDictionary(locale as Locale);
   const isTh = locale === "th";
 
-  const title = isTh ? post.title_th : post.title_en;
-  const summary = isTh ? post.summary_th : post.summary_en;
-  const body = isTh ? post.body : post.body_en;
+  const title = post.title;
+  const summary = post.summary;
+  const body = post.body;
   const date = new Date(post.date).toLocaleDateString(
     isTh ? "th-TH" : "en-US",
     { year: "numeric", month: "long", day: "numeric" }
   );
 
-  const relatedPosts = await getRelatedPosts(post.slug, post.tags, 3);
+  const relatedPosts = await getRelatedPosts(post.slug, post.tags, 3, locale);
 
   return (
     <>
@@ -286,7 +285,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
                 <CardContent>
                   <div className="flex flex-col gap-4">
                     {relatedPosts.map((related, i) => {
-                      const relTitle = isTh ? related.title_th : related.title_en;
+                      const relTitle = related.title;
                       const relDate = new Date(related.date).toLocaleDateString(
                         isTh ? "th-TH" : "en-US",
                         { year: "numeric", month: "long", day: "numeric" }

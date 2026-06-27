@@ -59,11 +59,9 @@ export function NewsListClient({
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter((p) => {
-        const title = isTh ? p.title_th : p.title_en;
-        const summary = isTh ? p.summary_th : p.summary_en;
         return (
-          title.toLowerCase().includes(q) ||
-          summary.toLowerCase().includes(q)
+          p.title.toLowerCase().includes(q) ||
+          p.summary.toLowerCase().includes(q)
         );
       });
     }

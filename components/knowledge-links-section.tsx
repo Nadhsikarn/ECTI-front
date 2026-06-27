@@ -73,11 +73,6 @@ export function KnowledgeLinksSection({
     );
   }, [activePlatform, resources]);
 
-  function getTitle(item: ResourceLink) {
-    if (locale === "en" && item.title_en) return item.title_en;
-    return item.title_th;
-  }
-
   function formatDate(iso: string) {
     const d = new Date(iso);
     return d.toLocaleDateString(locale === "th" ? "th-TH" : "en-US", {
@@ -160,13 +155,13 @@ export function KnowledgeLinksSection({
 
                 {/* Title */}
                 <h3 className="text-sm font-semibold leading-snug text-card-foreground line-clamp-2">
-                  {getTitle(item)}
+                  {item.title}
                 </h3>
 
                 {/* Summary */}
-                {item.summary_th && (
+                {item.summary && (
                   <p className="text-xs leading-relaxed text-muted-foreground line-clamp-1">
-                    {item.summary_th}
+                    {item.summary}
                   </p>
                 )}
 

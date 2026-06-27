@@ -32,7 +32,6 @@ export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
-  const isTh = locale === "th";
 
 
 // mock data
@@ -102,22 +101,22 @@ export default async function AboutPage({ params }: PageProps) {
   ];*/
 
   const [rawMembers, rawMilestones, rawCards, rawObjectives] = await Promise.all([
-    getBoardMembers(),
-    getMilestones(),
-    getMissionVisionCards(),
-    getObjectives(),
+    getBoardMembers(locale),
+    getMilestones(locale),
+    getMissionVisionCards(locale),
+    getObjectives(locale),
   ]);
 
   const timelineMilestones = rawMilestones.map((m) => ({
     year: m.year,
-    title: isTh ? m.title : m.title_en,
-    desc: isTh ? m.description : m.description_en,
+    title: m.title,
+    desc: m.description,
   }));
 
   const boardMembers = rawMembers.map((m) => ({
-    name: isTh ? m.name : m.name_en,
-    role: isTh ? m.role : m.role_en,
-    institution: isTh ? m.institution : m.institution_en,
+    name: m.name,
+    role: m.role,
+    institution: m.institution,
     committee: m.committee,
     image: m.image
       ? m.image.url  // ใช้ URL ตรงๆ เลย ไม่ต้องต่อ env
@@ -128,8 +127,8 @@ export default async function AboutPage({ params }: PageProps) {
 
   const cards = rawCards.length > 0
     ? rawCards.map((c) => ({
-        title: isTh ? c.title_th : c.title_en,
-        desc: isTh ? c.description_th : c.description_en,
+        title: c.title,
+        desc: c.description,
       }))
     : [
         {
@@ -143,7 +142,7 @@ export default async function AboutPage({ params }: PageProps) {
       ];
 
   const objectives = rawObjectives.length > 0
-    ? rawObjectives.map((o) => (isTh ? o.text_th : o.text_en))
+    ? rawObjectives.map((o) => o.text)
     : dict.about.objectives;
 
   const cardConfig = [

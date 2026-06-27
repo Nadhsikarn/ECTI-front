@@ -1,18 +1,17 @@
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").replace(/\/+$/, "");
+
 export interface BoardMember {
   id: number;
   name: string;
-  name_en: string;
   role: string;
-  role_en: string;
   institution: string;
-  institution_en: string;
   committee: "exec" | "academic" | "publications";
   image: { url: string } | null;
 }
 
-export async function getBoardMembers(): Promise<BoardMember[]> {
+export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/abouts?populate=image`,
+    `${BASE_URL}/api/board-members?populate=image&locale=${locale}`,
     { next: { revalidate: 0 } }
   );
 
@@ -23,11 +22,8 @@ export async function getBoardMembers(): Promise<BoardMember[]> {
   return json.data.map((item: any) => ({
     id: item.id,
     name: item.name,
-    name_en: item.name_en,
     role: item.role,
-    role_en: item.role_en,
     institution: item.institution,
-    institution_en: item.institution_en,
     committee: item.committee,
     image: item.image ?? null,
   }));
@@ -37,40 +33,34 @@ export interface Milestone {
   id: number;
   year: string;
   title: string;
-  title_en: string;
   description: string;
-  description_en: string;
 }
 
-export async function getMilestones(): Promise<Milestone[]> {
+export async function getMilestones(locale: string): Promise<Milestone[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/milestones?sort=year:asc`,
+    `${BASE_URL}/api/milestones?sort=year:asc&locale=${locale}`,
     { next: { revalidate: 0 } }
   );
   if (!res.ok) return [];
   const json = await res.json();
   return json.data.map((item: any) => ({
     id: item.id,
-    year: item.year,
+    year: String(item.year),
     title: item.title,
-    title_en: item.title_en,
     description: item.description,
-    description_en: item.description_en,
   }));
 }
 
 export interface AboutCard {
   id: number;
-  title_th: string;
-  title_en: string;
-  description_th: string;
-  description_en: string;
+  title: string;
+  description: string;
 }
 
-export async function getMissionVisionCards(): Promise<AboutCard[]> {
+export async function getMissionVisionCards(locale: string): Promise<AboutCard[]> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/mission-vision?populate=cards`,
+      `${BASE_URL}/api/mission-vision?populate=cards&locale=${locale}`,
       { next: { revalidate: 0 } }
     );
     if (!res.ok) return [];
@@ -79,10 +69,8 @@ export async function getMissionVisionCards(): Promise<AboutCard[]> {
     const cards = data?.cards ?? data?.attributes?.cards ?? [];
     return cards.map((item: any) => ({
       id: item.id,
-      title_th: item.title_th ?? "",
-      title_en: item.title_en ?? "",
-      description_th: item.description_th ?? "",
-      description_en: item.description_en ?? "",
+      title: item.title ?? "",
+      description: item.description ?? "",
     }));
   } catch (error) {
     console.error("Error fetching mission-vision cards:", error);
@@ -92,14 +80,13 @@ export async function getMissionVisionCards(): Promise<AboutCard[]> {
 
 export interface ObjectiveItem {
   id: number;
-  text_th: string;
-  text_en: string;
+  text: string;
 }
 
-export async function getObjectives(): Promise<ObjectiveItem[]> {
+export async function getObjectives(locale: string): Promise<ObjectiveItem[]> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/objective?populate=items`,
+      `${BASE_URL}/api/objective?populate=items&locale=${locale}`,
       { next: { revalidate: 0 } }
     );
     if (!res.ok) return [];
@@ -108,8 +95,7 @@ export async function getObjectives(): Promise<ObjectiveItem[]> {
     const items = data?.items ?? data?.attributes?.items ?? [];
     return items.map((item: any) => ({
       id: item.id,
-      text_th: item.text_th ?? "",
-      text_en: item.text_en ?? "",
+      text: item.text ?? "",
     }));
   } catch (error) {
     console.error("Error fetching objectives:", error);

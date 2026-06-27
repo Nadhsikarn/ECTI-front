@@ -8,7 +8,7 @@ interface FeaturedUpdatesSectionProps {
 }
 
 export async function FeaturedUpdatesSection({ locale, dict }: FeaturedUpdatesSectionProps) {
-  const posts = await getNewsPosts();
+  const posts = await getNewsPosts(locale);
   const latestPosts = posts.slice(0, 3);
 
   return (

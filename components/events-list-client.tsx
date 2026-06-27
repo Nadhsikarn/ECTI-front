@@ -96,8 +96,8 @@ export function EventsListClient({
       result = result.filter(
         (e) =>
           e.title.toLowerCase().includes(q) ||
-          (isTh ? e.description_th : e.description_en).toLowerCase().includes(q) ||
-          (isTh ? e.location_th : e.location_en).toLowerCase().includes(q)
+          e.description.toLowerCase().includes(q) ||
+          e.location.toLowerCase().includes(q)
       );
     }
 
@@ -112,7 +112,7 @@ export function EventsListClient({
     }
     if (locationFilter !== "all") {
       result = result.filter(
-        (e) => (isTh ? e.location_th : e.location_en) === locationFilter
+        (e) => e.location === locationFilter
       );
     }
 
@@ -353,9 +353,9 @@ function EventCard({
   dict: Dictionary;
 }) {
   const isTh = locale === "th";
-  const date = isTh ? event.date_th : event.date_en;
-  const location = isTh ? event.location_th : event.location_en;
-  const description = isTh ? event.description_th : event.description_en;
+  const date = event.date;
+  const location = event.location;
+  const description = event.description;
 
   const deadlinesToShow = event.deadlines.slice(0, 3);
 
@@ -367,7 +367,7 @@ function EventCard({
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center gap-2.5">
               <h3 className="text-lg font-semibold text-card-foreground">
-                {locale == "th" ? event.title : event.title_en}
+                {event.title}
               </h3>
               <Badge className={getStatusStyle(event.status)}>
                 {getStatusLabel(event.status, dict)}
@@ -390,7 +390,7 @@ function EventCard({
           </span>
           <span className="flex items-center gap-1.5">
             <MapPin className="h-4 w-4 shrink-0 text-primary" />
-            {locale == "th" ? event.location_th : event.location_en}
+            {location}
           </span>
         </div>
 
@@ -400,8 +400,8 @@ function EventCard({
             {deadlinesToShow.map((d, i) => (
               <span key={i} className="flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5 text-accent" />
-                <span className="font-medium">{isTh ? d.label_th : d.label_en}:</span>{" "}
-                {isTh ? d.date_th : d.date_en}
+                <span className="font-medium">{d.label}:</span>{" "}
+                {d.date}
               </span>
             ))}
           </div>

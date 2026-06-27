@@ -3,13 +3,12 @@ const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").re
 export type Platform = "YouTube" | "LinkedIn" | "Facebook";
 
 export interface ResourceLink {
-  title_th: string;
-  title_en?: string;
+  title: string;
   platform: Platform;
   url: string;
   date: string;
   thumbnailUrl?: string;
-  summary_th?: string;
+  summary?: string;
 }
 
 async function fetchAPI(endpoint: string) {
@@ -27,8 +26,8 @@ async function fetchAPI(endpoint: string) {
   }
 }
 
-export async function fetchResources(): Promise<ResourceLink[]> {
-  const data = await fetchAPI("/api/resources");
+export async function fetchResources(locale: string): Promise<ResourceLink[]> {
+  const data = await fetchAPI(`/api/resources?locale=${locale}`);
   if (!data || !Array.isArray(data)) return [];
 
   return data.map((item: any) => {
@@ -39,12 +38,11 @@ export async function fetchResources(): Promise<ResourceLink[]> {
     else if (rawPlatform === "youtube") platform = "YouTube";
 
     return {
-      title_th: item.title || "",
-      title_en: item.title_en || item.title || "",
+      title: item.title || "",
       platform,
       url: item.link || "#",
       date: item.date || new Date().toISOString().split("T")[0],
-      summary_th: item.description || "",
+      summary: item.description || "",
     };
   });
 }

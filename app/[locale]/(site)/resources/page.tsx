@@ -32,7 +32,7 @@ export default async function ResourcesPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
-  const apiResources = await fetchResources();
+  const apiResources = await fetchResources(locale);
 
   const sections = [
     {

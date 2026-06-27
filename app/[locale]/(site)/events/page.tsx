@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { EventsListClient } from "@/components/events-list-client";
-import { fetchEventsFromAPI, getUniqueYears, getUniqueLocations } from "@/lib/events-data";
+import { fetchEventsFromAPI } from "@/lib/events-data";
 
 export const dynamic = "force-dynamic";
 
@@ -32,21 +32,12 @@ export default async function EventsPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
-  const events = await fetchEventsFromAPI();
-
-  /* เรียกตอนใช้ mock จารย์
-  const years = getUniqueYears();
-  const locations = getUniqueLocations(locale as Locale);
-  */
+  const events = await fetchEventsFromAPI(locale);
 
   const years = [...new Set(events.map(e => String(e.year)))].sort((a, b) => Number(b) - Number(a));
 
   const locations = [
-    ...new Set(
-      events.map(e =>
-        locale === "th" ? e.location_th : e.location_en
-      )
-    ),
+    ...new Set(events.map(e => e.location)),
   ];
 
   return (

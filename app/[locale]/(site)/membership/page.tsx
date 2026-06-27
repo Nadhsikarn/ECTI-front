@@ -65,14 +65,14 @@ export default async function MembershipPage({ params }: PageProps) {
   const dict = getDictionary(locale as Locale);
 
   const [apiBenefits, apiHowToJoins, apiMemberTypes, apiQuestions] = await Promise.all([
-    fetchBenefits(),
-    fetchHowToJoins(),
-    fetchMemberTypes(),
-    fetchQuestions(),
+    fetchBenefits(locale),
+    fetchHowToJoins(locale),
+    fetchMemberTypes(locale),
+    fetchQuestions(locale),
   ]);
 
-  const finalBenefits = apiBenefits.length > 0 
-    ? apiBenefits.map(b => b.Benefit)
+  const finalBenefits = apiBenefits.length > 0
+    ? apiBenefits.map(b => b.description)
     : dict.membership.benefits;
 
   const fallbackSteps = [
@@ -99,8 +99,8 @@ export default async function MembershipPage({ params }: PageProps) {
     { q: dict.membership.faq5Q, a: dict.membership.faq5A },
   ];
 
-  const finalFaqs = apiQuestions.length > 0 
-    ? apiQuestions.map(q => ({ q: q.Questions, a: q.answer }))
+  const finalFaqs = apiQuestions.length > 0
+    ? apiQuestions.map(q => ({ q: q.question, a: q.answer }))
     : fallbackFaqs;
 
   const finalMemberTypes = apiMemberTypes.length > 0 ? apiMemberTypes : null;
@@ -172,25 +172,25 @@ export default async function MembershipPage({ params }: PageProps) {
                           <div className="flex items-center gap-3">
                             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                               {type.iconUrl ? (
-                                <img src={type.iconUrl} alt={type.Type} className="h-5 w-5 object-contain" />
+                                <img src={type.iconUrl} alt={type.type} className="h-5 w-5 object-contain" />
                               ) : (
                                 <Users className="h-5 w-5 text-primary" />
                               )}
                             </div>
-                            <span className="font-medium text-foreground">{type.Type}</span>
+                            <span className="font-medium text-foreground">{type.type}</span>
                           </div>
                         </TableCell>
                         <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                          {type.Eligibility}
+                          {type.eligibility}
                         </TableCell>
                         <TableCell className="px-4 py-4 text-center">
                           <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                            {type.AnnualFee} THB
+                            {type.annual_fee} THB
                           </Badge>
                         </TableCell>
                         <TableCell className="px-4 py-4 text-center">
                           <Badge variant="outline" className="border-primary/30 text-primary">
-                            {type.LifetimeFee} THB
+                            {type.lifetime_fee} THB
                           </Badge>
                         </TableCell>
                       </TableRow>

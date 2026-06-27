@@ -41,8 +41,8 @@ export function NewsCard({
   dict: Dictionary;
 }) {
   const isTh = locale === "th";
-  const title = isTh ? post.title_th : post.title_en;
-  const summary = isTh ? post.summary_th : post.summary_en;
+  const title = post.title;
+  const summary = post.summary;
   const date = post.date
     ? new Date(post.date).toLocaleDateString(
         isTh ? "th-TH" : "en-US",

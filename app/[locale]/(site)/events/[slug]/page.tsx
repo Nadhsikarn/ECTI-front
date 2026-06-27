@@ -19,8 +19,8 @@ import {
   Tag,
   CalendarCheck,
 } from "lucide-react";
-import { events, getEventBySlug } from "@/lib/events-data";
-import type { EventStatus } from "@/lib/events-data";
+import { events, getEventBySlug, fetchEventBySlug } from "@/lib/events-data";
+import type { ECTIEvent, EventStatus } from "@/lib/events-data";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -39,32 +39,31 @@ export async function generateMetadata({ params }: PageProps) {
   const event = getEventBySlug(slug);
   if (!event) return {};
   const dict = getDictionary(locale as Locale);
-  const isTh = locale === "th";
   return {
     title: `${event.title} | ${dict.events.title}`,
-    description: isTh ? event.description_th : event.description_en,
+    description: event.description,
   };
 }
 
 function getStatusLabel(status: EventStatus, dict: ReturnType<typeof getDictionary>): string {
   const map: Record<EventStatus, string> = {
+    open: dict.events.statusCfp,
+    register: dict.events.statusRegOpen,
     upcoming: dict.events.statusUpcoming,
-    cfp: dict.events.statusCfp,
-    "reg-open": dict.events.statusRegOpen,
-    past: dict.events.statusPast,
+    finished: dict.events.statusPast,
   };
   return map[status];
 }
 
 function getStatusStyle(status: EventStatus): string {
   switch (status) {
-    case "cfp":
+    case "open":
       return "bg-accent text-accent-foreground";
-    case "reg-open":
+    case "register":
       return "bg-primary text-primary-foreground";
     case "upcoming":
       return "bg-chart-4 text-primary-foreground";
-    case "past":
+    case "finished":
       return "bg-muted text-muted-foreground";
   }
 }
@@ -72,17 +71,21 @@ function getStatusStyle(status: EventStatus): string {
 export default async function EventDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   if (!isValidLocale(locale)) notFound();
-  const event = getEventBySlug(slug);
+
+  // Try API first, fall back to static data
+  let event: ECTIEvent | null | undefined = await fetchEventBySlug(slug, locale);
+  if (!event) {
+    event = getEventBySlug(slug);
+  }
   if (!event) notFound();
 
   const dict = getDictionary(locale as Locale);
-  const isTh = locale === "th";
 
   const title = event.title;
-  const date = isTh ? event.date_th : event.date_en;
-  const location = isTh ? event.location_th : event.location_en;
-  const description = isTh ? event.description_th : event.description_en;
-  const overview = isTh ? event.overview_th : event.overview_en;
+  const date = event.date;
+  const location = event.location;
+  const description = event.description;
+  const overview = event.overview;
 
   return (
     <>
@@ -158,7 +161,7 @@ export default async function EventDetailPage({ params }: PageProps) {
                           {i + 1}
                         </div>
                         <span className="text-sm font-medium text-card-foreground">
-                          {isTh ? track.name_th : track.name_en}
+                          {track.name}
                         </span>
                       </div>
                     ))}
@@ -227,10 +230,10 @@ export default async function EventDetailPage({ params }: PageProps) {
                     {event.deadlines.map((d, i) => (
                       <div key={i} className="flex flex-col gap-0.5">
                         <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-                          {isTh ? d.label_th : d.label_en}
+                          {d.label}
                         </span>
                         <span className="text-sm text-card-foreground">
-                          {isTh ? d.date_th : d.date_en}
+                          {d.date}
                         </span>
                         {i < event.deadlines.length - 1 && (
                           <Separator className="mt-3" />
@@ -273,9 +276,9 @@ export default async function EventDetailPage({ params }: PageProps) {
             </Card>
 
             {/* Registration CTA */}
-            {event.status !== "past" && (
+            {event.status !== "finished" && (
               <div className="flex flex-col gap-3">
-                {event.status === "cfp" && (
+                {event.status === "open" && (
                   <Button
                     size="lg"
                     className="w-full gap-2 bg-accent text-accent-foreground hover:bg-accent/90"

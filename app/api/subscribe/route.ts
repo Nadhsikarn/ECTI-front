@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${STRAPI_API_TOKEN}`,
       },
-      body: JSON.stringify({ data: { email, locale } }),
+      body: JSON.stringify({ data: { email, language: locale } }),
       cache: "no-store",
     });
   } catch (err) {

@@ -122,6 +122,53 @@ function formatDate(date: string, locale: string) {
   });
 }
 
+function formatDateRange(start: string, end: string, locale: string) {
+  if (!start) return "";
+  const startStr = formatDate(start, locale);
+  if (!end || end === start) return startStr;
+  return `${startStr} – ${formatDate(end, locale)}`;
+}
+
+export interface FeaturedEvent {
+  slug: string;
+  title: string;
+  description: string;
+  location: string;
+  dateLabel: string;
+  deadlines: EventDeadline[];
+  registerUrl: string;
+}
+
+// Featured event for the homepage "กิจกรรมเด่น" section: the latest activity,
+// chosen as the one with the most recent event_start_date. Returns null when no
+// activity exists or the API is unreachable, so the section can hide itself.
+export async function getFeaturedEvent(locale: string): Promise<FeaturedEvent | null> {
+  const res = await fetch(
+    `${API_URL}?populate=*&sort=event_start_date:desc&pagination[limit]=1&locale=${locale}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) return null;
+
+  const json = await res.json();
+  const item = json?.data?.[0];
+  if (!item) return null;
+
+  return {
+    slug: item.slug ?? String(item.id),
+    title: item.title ?? "",
+    description: item.description?.[0]?.children?.[0]?.text ?? "",
+    location: item.location ?? "",
+    dateLabel: formatDateRange(item.event_start_date, item.event_end_date, locale),
+    deadlines:
+      item.deadline?.map((d: any) => ({
+        label: d.title,
+        date: formatDate(d.date, locale),
+      })) ?? [],
+    registerUrl: item.register_url ?? "",
+  };
+}
+
 
 export const events: ECTIEvent[] = [
   {

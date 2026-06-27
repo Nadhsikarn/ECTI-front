@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { MapPin, CalendarDays, FileText, UserPlus, ArrowRight } from "lucide-react";
+import { MapPin, CalendarDays, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { getFeaturedEvent } from "@/lib/events-data";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 interface FeaturedEventSectionProps {
@@ -9,7 +10,15 @@ interface FeaturedEventSectionProps {
   dict: Dictionary;
 }
 
-export function FeaturedEventSection({ locale, dict }: FeaturedEventSectionProps) {
+export async function FeaturedEventSection({ locale, dict }: FeaturedEventSectionProps) {
+  const event = await getFeaturedEvent(locale);
+
+  // No activity to feature (or API unreachable) — hide the section entirely.
+  if (!event) return null;
+
+  const eventsHref = `/${locale}/events`;
+  const isExternalReg = event.registerUrl.startsWith("http");
+
   return (
     <section className="bg-background py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
@@ -29,59 +38,73 @@ export function FeaturedEventSection({ locale, dict }: FeaturedEventSectionProps
               </div>
               <div className="relative flex flex-col items-center gap-3">
                 <span className="text-5xl font-bold md:text-6xl">
-                  {dict.home.featuredEventTitle}
+                  {event.title}
                 </span>
-                <p className="text-base text-primary-foreground/80">
-                  {dict.home.featuredEventSubtitle}
-                </p>
+                {event.description && (
+                  <p className="text-base text-primary-foreground/80">
+                    {event.description}
+                  </p>
+                )}
 
-                <div className="mt-2 flex items-center gap-2 text-sm text-primary-foreground/70">
-                  <MapPin className="h-4 w-4" aria-hidden="true" />
-                  <span>{dict.home.featuredEventLocation}</span>
-                </div>
+                {event.location && (
+                  <div className="mt-2 flex items-center gap-2 text-sm text-primary-foreground/70">
+                    <MapPin className="h-4 w-4" aria-hidden="true" />
+                    <span>{event.location}</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Right: details */}
             <div className="flex flex-1 flex-col justify-center gap-6 p-8 lg:p-12">
-              <div className="flex items-center gap-3">
-                <CalendarDays className="h-5 w-5 text-primary" aria-hidden="true" />
-                <span className="text-lg font-semibold text-foreground">
-                  {dict.home.featuredEventDate}
-                </span>
-              </div>
-
-              <Separator />
-
-              <div className="flex flex-col gap-3">
-                <div className="flex items-start gap-3">
-                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
-                  <span className="text-sm text-foreground">
-                    {dict.home.featuredEventDeadlinePaper}
+              {event.dateLabel && (
+                <div className="flex items-center gap-3">
+                  <CalendarDays className="h-5 w-5 text-primary" aria-hidden="true" />
+                  <span className="text-lg font-semibold text-foreground">
+                    {event.dateLabel}
                   </span>
                 </div>
-                <div className="flex items-start gap-3">
-                  <UserPlus className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
-                  <span className="text-sm text-foreground">
-                    {dict.home.featuredEventDeadlineReg}
-                  </span>
-                </div>
-              </div>
+              )}
+
+              {event.deadlines.length > 0 && (
+                <>
+                  <Separator />
+
+                  <div className="flex flex-col gap-3">
+                    {event.deadlines.map((deadline, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <FileText className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                        <span className="text-sm text-foreground">
+                          {deadline.label}: {deadline.date}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <Separator />
 
               <div className="flex flex-wrap gap-3">
-                <Link href={`/${locale}/events`}>
+                <Link href={eventsHref}>
                   <Button className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
                     {dict.home.featuredEventCta}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
-                <Link href={`/${locale}/events`}>
-                  <Button variant="outline" className="gap-2">
-                    {dict.home.featuredEventRegCta}
-                  </Button>
-                </Link>
+                {isExternalReg ? (
+                  <a href={event.registerUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" className="gap-2">
+                      {dict.home.featuredEventRegCta}
+                    </Button>
+                  </a>
+                ) : (
+                  <Link href={eventsHref}>
+                    <Button variant="outline" className="gap-2">
+                      {dict.home.featuredEventRegCta}
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

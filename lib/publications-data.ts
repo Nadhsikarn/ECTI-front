@@ -1,0 +1,23 @@
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").replace(/\/+$/, "");
+
+export interface Journal {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+}
+
+export async function getJournals(locale: string): Promise<Journal[]> {
+  const res = await fetch(
+    `${BASE_URL}/api/journals?sort=order:asc&locale=${locale}`,
+    { next: { revalidate: 0 } }
+  );
+  if (!res.ok) return [];
+  const json = await res.json();
+  return json.data.map((item: any) => ({
+    id: item.id,
+    title: item.title ?? "",
+    description: item.description ?? "",
+    url: item.url ?? "",
+  }));
+}

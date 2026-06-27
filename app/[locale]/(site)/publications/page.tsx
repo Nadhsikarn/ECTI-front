@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, FileText, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getJournals } from "@/lib/publications-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -31,23 +32,7 @@ export default async function PublicationsPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
-  const journals = [
-    {
-      title: dict.publications.journalEEC,
-      description: dict.publications.journalEECDesc,
-      icon: BookOpen,
-    },
-    {
-      title: dict.publications.journalCIT,
-      description: dict.publications.journalCITDesc,
-      icon: BookOpen,
-    },
-    {
-      title: dict.publications.journalARD,
-      description: dict.publications.journalARDDesc,
-      icon: BookOpen,
-    },
-  ];
+  const journals = await getJournals(locale);
 
   return (
     <>
@@ -67,12 +52,12 @@ export default async function PublicationsPage({ params }: PageProps) {
         <div className="mb-16 grid gap-6 md:grid-cols-3">
           {journals.map((journal) => (
             <Card
-              key={journal.title}
+              key={journal.id}
               className="border-border transition-shadow hover:shadow-lg"
             >
               <CardContent className="flex flex-col gap-4 p-6">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <journal.icon className="h-6 w-6 text-primary" />
+                  <BookOpen className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold text-card-foreground">
                   {journal.title}
@@ -80,13 +65,22 @@ export default async function PublicationsPage({ params }: PageProps) {
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {journal.description}
                 </p>
-                <Button
-                  variant="outline"
-                  className="mt-auto w-fit gap-2 border-border"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  {dict.common.readMore}
-                </Button>
+                {journal.url && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="mt-auto w-fit gap-2 border-border"
+                  >
+                    <a
+                      href={journal.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      {dict.common.readMore}
+                    </a>
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}

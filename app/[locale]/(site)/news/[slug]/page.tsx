@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
+import { RichTextRenderer } from "@/components/rich-text-renderer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -65,94 +66,6 @@ function getTagStyle(tag: NewsTag): string {
     case "publications": return "bg-chart-4/10 text-chart-4 border-chart-4/20";
     case "article": return "bg-chart-3/10 text-chart-3 border-chart-3/20";
   }
-}
-
-// Recursive child node renderer
-function RenderChild({ child }: { child: any }) {
-  if (child.type === "link") {
-    return (
-      <a
-        href={child.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-primary underline hover:text-primary/80 transition-colors"
-      >
-        {child.children?.map((c: any, idx: number) => (
-          <RenderChild key={idx} child={c} />
-        ))}
-      </a>
-    );
-  }
-
-  const text = child.text ?? "";
-  return (
-    <span
-      className={`${child.bold ? "font-semibold" : ""} ${child.italic ? "italic" : ""} ${child.underline ? "underline" : ""} ${child.strikethrough ? "line-through" : ""}`}
-    >
-      {text}
-    </span>
-  );
-}
-
-// Rich text blocks renderer
-function RichTextRenderer({ blocks }: { blocks: any[] }) {
-  if (!blocks?.length) return null;
-  return (
-    <>
-      {blocks.map((block, i) => {
-        switch (block.type) {
-          case "paragraph":
-            return (
-              <p key={i} className="mb-4 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
-                {block.children?.map((child: any, j: number) => (
-                  <RenderChild key={j} child={child} />
-                ))}
-              </p>
-            );
-          case "heading": {
-            const level = block.level ?? 2;
-            const headingClass =
-              level === 1 ? "mt-8 mb-3 text-2xl font-bold text-foreground" :
-              level === 2 ? "mt-7 mb-2 text-xl font-bold text-foreground" :
-                            "mt-6 mb-2 text-lg font-semibold text-foreground";
-            const Tag = `h${level}` as "h1" | "h2" | "h3";
-            return (
-              <Tag key={i} className={headingClass}>
-                {block.children?.map((child: any, j: number) => (
-                  <RenderChild key={j} child={child} />
-                ))}
-              </Tag>
-            );
-          }
-          case "list":
-            return (
-              <ul key={i} className="mb-4 flex flex-col gap-1">
-                {block.children?.map((item: any, j: number) => (
-                  <li key={j} className="flex items-start gap-2 text-sm leading-relaxed text-foreground">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    <span>
-                      {item.children?.map((child: any, idx: number) => (
-                        <RenderChild key={idx} child={child} />
-                      ))}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            );
-          case "quote":
-            return (
-              <blockquote key={i} className="my-4 border-l-4 border-primary pl-4 italic text-muted-foreground whitespace-pre-wrap">
-                {block.children?.map((child: any, j: number) => (
-                  <RenderChild key={j} child={child} />
-                ))}
-              </blockquote>
-            );
-          default:
-            return null;
-        }
-      })}
-    </>
-  );
 }
 
 export default async function NewsDetailPage({ params }: PageProps) {

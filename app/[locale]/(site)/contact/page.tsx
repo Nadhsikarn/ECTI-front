@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ContactForm } from "@/components/contact-form";
+import { getContact } from "@/lib/contact-data";
 import {
   MapPin,
   Mail,
@@ -41,30 +42,37 @@ export default async function ContactPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
+  // Editable in Strapi; fall back to dictionary values if the CMS is unavailable.
+  const contact = await getContact(locale);
+  const address = contact?.address || dict.contact.addressText;
+  const email = contact?.email || dict.contact.emailText;
+  const phone = contact?.phone || dict.contact.phoneText;
+  const officeHours = contact?.officeHours || dict.contact.officeHoursText;
+
   const contactCards = [
     {
       icon: MapPin,
       title: dict.contact.addressTitle,
-      text: dict.contact.addressText,
+      text: address,
       color: "bg-primary/10 text-primary",
     },
     {
       icon: Mail,
       title: dict.contact.emailTitle,
-      text: dict.contact.emailText,
+      text: email,
       color: "bg-accent/10 text-accent",
-      href: `mailto:${dict.contact.emailText}`,
+      href: `mailto:${email}`,
     },
     {
       icon: Phone,
       title: dict.contact.phoneTitle,
-      text: dict.contact.phoneText,
+      text: phone,
       color: "bg-chart-4/15 text-chart-4",
     },
     {
       icon: Clock,
       title: dict.contact.officeHoursTitle,
-      text: dict.contact.officeHoursText,
+      text: officeHours,
       color: "bg-primary/10 text-primary",
     },
   ];
@@ -94,9 +102,9 @@ export default async function ContactPage({ params }: PageProps) {
               const content = (
                 <Card
                   key={info.title}
-                  className="border-border transition-shadow hover:shadow-md"
+                  className="h-full border-border transition-shadow hover:shadow-md"
                 >
-                  <CardContent className="flex flex-col gap-3 p-5">
+                  <CardContent className="flex h-full flex-col gap-3 p-5">
                     <div
                       className={`flex h-11 w-11 items-center justify-center rounded-lg ${info.color}`}
                     >
@@ -116,7 +124,7 @@ export default async function ContactPage({ params }: PageProps) {
                   <a
                     key={info.title}
                     href={info.href}
-                    className="block transition-transform hover:scale-[1.01]"
+                    className="block h-full transition-transform hover:scale-[1.01]"
                   >
                     {content}
                   </a>
@@ -162,7 +170,7 @@ export default async function ContactPage({ params }: PageProps) {
                           : "KMUTNB"}
                       </p>
                       <p className="max-w-xs text-xs text-muted-foreground">
-                        {dict.contact.addressText}
+                        {address}
                       </p>
                     </div>
                     <a

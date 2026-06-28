@@ -2,6 +2,7 @@ import { getDictionary, isValidLocale } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
+import { RichTextRenderer } from "@/components/rich-text-renderer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -327,7 +328,11 @@ export default async function MembershipPage({ params }: PageProps) {
                       {faq.q}
                     </AccordionTrigger>
                     <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                      {faq.a}
+                      {typeof faq.a === "string" ? (
+                        faq.a
+                      ) : (
+                        <RichTextRenderer blocks={faq.a} />
+                      )}
                     </AccordionContent>
                   </AccordionItem>
                 ))}

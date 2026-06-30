@@ -183,7 +183,7 @@ export function NewsListClient({
         <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {visible.map((post) => (
-              <NewsCard key={post.slug} post={post} locale={locale} dict={dict} />
+              <NewsCard key={post.id} post={post} locale={locale} dict={dict} />
             ))}
           </div>
 

@@ -26,17 +26,19 @@ export async function getNewsPosts(locale: string): Promise<NewsPost[]> {
   );
   if (!res.ok) return [];
   const json = await res.json();
-  return json.data.map((item: any) => ({
-    id: item.id,
-    slug: item.slug,
-    title: item.title ?? "",
-    summary: item.summary ?? "",
-    body: item.body ?? [],
-    date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
-    tags: (item.tags ?? []).map((t: any) => t.name.toLowerCase() as NewsTag),
-    author: item.author ?? undefined,
-    readTimeMin: item.read_time_min ?? 1,
-  }));
+  return json.data
+    .filter((item: any) => item.slug) // skip entries with no slug (e.g. missing localization)
+    .map((item: any) => ({
+      id: item.id,
+      slug: item.slug,
+      title: item.title ?? "",
+      summary: item.summary ?? "",
+      body: item.body ?? [],
+      date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
+      tags: (item.tags ?? []).map((t: any) => t.name.toLowerCase() as NewsTag),
+      author: item.author ?? undefined,
+      readTimeMin: item.read_time_min ?? 1,
+    }));
 }
 
 export async function getNewsPostBySlug(slug: string, locale: string): Promise<NewsPost | undefined> {

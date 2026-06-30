@@ -10,7 +10,7 @@ export interface Journal {
 export async function getJournals(locale: string): Promise<Journal[]> {
   const res = await fetch(
     `${BASE_URL}/api/journals?sort=order:asc&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) return [];
   const json = await res.json();

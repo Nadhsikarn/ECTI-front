@@ -12,7 +12,7 @@ export interface BoardMember {
 export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
   const res = await fetch(
     `${BASE_URL}/api/board-members?populate=image&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
 
   if (!res.ok) return [];
@@ -39,7 +39,7 @@ export interface Milestone {
 export async function getMilestones(locale: string): Promise<Milestone[]> {
   const res = await fetch(
     `${BASE_URL}/api/milestones?sort=year:asc&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) return [];
   const json = await res.json();
@@ -61,7 +61,7 @@ export async function getMissionVisionCards(locale: string): Promise<AboutCard[]
   try {
     const res = await fetch(
       `${BASE_URL}/api/mission-vision?populate=cards&locale=${locale}`,
-      { next: { revalidate: 0 } }
+      { next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
     const json = await res.json();
@@ -87,7 +87,7 @@ export async function getObjectives(locale: string): Promise<ObjectiveItem[]> {
   try {
     const res = await fetch(
       `${BASE_URL}/api/objective?populate=items&locale=${locale}`,
-      { next: { revalidate: 0 } }
+      { next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
     const json = await res.json();

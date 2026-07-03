@@ -33,7 +33,7 @@ export async function getNewsPosts(locale: string): Promise<NewsPost[]> {
     summary: item.summary ?? "",
     body: item.body ?? [],
     date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
-    tags: (item.tags ?? []).map((t: any) => t.name.toLowerCase() as NewsTag),
+    tags: (item.tags ?? []).map((t: any) => t.key as NewsTag).filter(Boolean),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
   }));
@@ -55,7 +55,7 @@ export async function getNewsPostBySlug(slug: string, locale: string): Promise<N
     summary: item.summary ?? "",
     body: item.body ?? [],
     date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
-    tags: (item.tags ?? []).map((t: any) => t.name.toLowerCase() as NewsTag),
+    tags: (item.tags ?? []).map((t: any) => t.key as NewsTag).filter(Boolean),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
   };

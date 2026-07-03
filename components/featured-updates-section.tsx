@@ -23,7 +23,7 @@ export async function FeaturedUpdatesSection({ locale, dict }: FeaturedUpdatesSe
         {latestPosts.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-3">
             {latestPosts.map((post) => (
-              <NewsCard key={post.slug} post={post} locale={locale} dict={dict} />
+              <NewsCard key={post.id} post={post} locale={locale} dict={dict} />
             ))}
           </div>
         ) : (

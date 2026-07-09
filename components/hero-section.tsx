@@ -63,11 +63,11 @@ export function HeroSection({ locale, dict }: HeroSectionProps) {
 
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-24 text-center lg:px-8 lg:py-32">
         <Image
-          src="/images/ecti-logo.png"
+          src="/images/ecti-logo.svg"
           alt="ECTI Association Logo"
-          width={280}
-          height={112}
-          className="h-16 w-auto brightness-0 invert md:h-20"
+          width={185}
+          height={66}
+          className="h-12 w-auto brightness-0 invert md:h-16"
           priority
         />
 

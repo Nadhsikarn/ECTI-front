@@ -75,10 +75,10 @@ export function SiteHeader({ locale, dict }: SiteHeaderProps) {
           aria-label={locale === "th" ? "หน้าแรก ECTI" : "ECTI Home"}
         >
           <Image
-            src="/images/ecti-logo.png"
+            src="/images/ecti-logo.svg"
             alt="ECTI Association"
-            width={160}
-            height={64}
+            width={185}
+            height={66}
             className="h-9 w-auto md:h-10"
             priority
           />

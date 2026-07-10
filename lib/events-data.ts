@@ -139,22 +139,24 @@ export interface FeaturedEvent {
   registerUrl: string;
 }
 
-// Featured event for the homepage "กิจกรรมเด่น" section: the latest activity,
-// chosen as the one with the most recent event_start_date. Returns null when no
+// Featured events for the homepage "กิจกรรมเด่น" section: the latest activities,
+// ordered by most recent event_start_date. Returns an empty array when no
 // activity exists or the API is unreachable, so the section can hide itself.
-export async function getFeaturedEvent(locale: string): Promise<FeaturedEvent | null> {
+export async function getFeaturedEvents(
+  locale: string,
+  limit = 5
+): Promise<FeaturedEvent[]> {
   const res = await fetch(
-    `${API_URL}?populate=*&sort=event_start_date:desc&pagination[limit]=1&locale=${locale}`,
+    `${API_URL}?populate=*&sort=event_start_date:desc&pagination[limit]=${limit}&locale=${locale}`,
     { cache: "no-store" }
   );
 
-  if (!res.ok) return null;
+  if (!res.ok) return [];
 
   const json = await res.json();
-  const item = json?.data?.[0];
-  if (!item) return null;
+  if (!Array.isArray(json?.data)) return [];
 
-  return {
+  return json.data.map((item: any) => ({
     slug: item.slug ?? String(item.id),
     title: item.title ?? "",
     description: item.description?.[0]?.children?.[0]?.text ?? "",
@@ -166,7 +168,7 @@ export async function getFeaturedEvent(locale: string): Promise<FeaturedEvent | 
         date: formatDate(d.date, locale),
       })) ?? [],
     registerUrl: item.register_url ?? "",
-  };
+  }));
 }
 
 

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
       "Electrical Engineering/Electronics, Computer, Telecommunications, and Information Technology Association",
     images: [
       {
-        url: "/images/ecti-logo.png",
+        url: "/images/ecti-og.png",
         width: 1200,
         height: 630,
         alt: "ECTI Association Logo",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: "ECTI Association",
     description:
       "Electrical Engineering/Electronics, Computer, Telecommunications, and Information Technology Association",
-    images: ["/images/ecti-logo.png"],
+    images: ["/images/ecti-og.png"],
   },
   alternates: {
     languages: {

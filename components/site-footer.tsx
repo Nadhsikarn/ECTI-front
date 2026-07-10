@@ -55,10 +55,10 @@ export function SiteFooter({ locale, dict }: SiteFooterProps) {
           {/* Brand - spans 1 col, logo at natural aspect ratio */}
           <div className="flex flex-col gap-4 lg:col-span-1">
             <Image
-              src="/images/ecti-logo.png"
+              src="/images/ecti-logo.svg"
               alt="ECTI Association"
-              width={320}
-              height={130}
+              width={185}
+              height={66}
               className="h-auto w-36 brightness-0 invert"
             />
             <p className="text-sm leading-relaxed text-primary-foreground/70">

@@ -11,7 +11,7 @@ interface FeaturedEventSectionProps {
   dict: Dictionary;
 }
 
-function SpotlightEventCard({
+function FeaturedEventCard({
   event,
   eventsHref,
   dict,
@@ -92,52 +92,12 @@ function SpotlightEventCard({
   );
 }
 
-function CompactEventCard({ event }: { event: FeaturedEvent }) {
-  return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold leading-snug text-foreground">
-        {event.title}
-      </h3>
-
-      {event.description && (
-        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-          {event.description}
-        </p>
-      )}
-
-      <div className="mt-auto flex flex-col gap-2 text-sm text-muted-foreground">
-        {event.dateLabel && (
-          <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-            {event.dateLabel}
-          </span>
-        )}
-        {event.location && (
-          <span className="flex items-center gap-1.5">
-            <MapPin className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-            {event.location}
-          </span>
-        )}
-        {event.deadlines[0] && (
-          <span className="flex items-start gap-1.5 text-xs">
-            <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" />
-            <span>
-              {event.deadlines[0].label}: {event.deadlines[0].date}
-            </span>
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export async function FeaturedEventSection({ locale, dict }: FeaturedEventSectionProps) {
   const events = await getFeaturedEvents(locale, 5);
 
   // No activities to feature (or API unreachable) — hide the section entirely.
   if (events.length === 0) return null;
 
-  const [spotlight, ...rest] = events;
   const eventsHref = `/${locale}/events`;
 
   return (
@@ -149,15 +109,16 @@ export async function FeaturedEventSection({ locale, dict }: FeaturedEventSectio
           </h2>
         </div>
 
-        <SpotlightEventCard event={spotlight} eventsHref={eventsHref} dict={dict} />
-
-        {rest.length > 0 && (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {rest.map((event) => (
-              <CompactEventCard key={event.slug} event={event} />
-            ))}
-          </div>
-        )}
+        <div className="flex flex-col gap-8">
+          {events.map((event) => (
+            <FeaturedEventCard
+              key={event.slug}
+              event={event}
+              eventsHref={eventsHref}
+              dict={dict}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

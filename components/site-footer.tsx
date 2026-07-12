@@ -1,15 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Facebook, Twitter, Linkedin, Mail } from "lucide-react";
+import { Facebook, Linkedin, Youtube } from "lucide-react";
 import type { Dictionary, Locale } from "@/lib/i18n";
+import { getSocialLinks } from "@/lib/social-data";
 
 interface SiteFooterProps {
   locale: Locale;
   dict: Dictionary;
 }
 
-export function SiteFooter({ locale, dict }: SiteFooterProps) {
+// X (formerly Twitter) brand logo — lucide's `X` is a close/cross icon, not the
+// brand mark, so we inline the official logo here.
+function XIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+export async function SiteFooter({ locale, dict }: SiteFooterProps) {
   const currentYear = new Date().getFullYear();
+  const social = await getSocialLinks(locale);
 
   const quickLinksCol1 = [
     { label: dict.nav.home, href: `/${locale}` },
@@ -25,28 +37,21 @@ export function SiteFooter({ locale, dict }: SiteFooterProps) {
     { label: dict.nav.contact, href: `/${locale}/contact` },
   ];
 
-  const socialLinks = [
-    {
-      label: "Facebook",
-      href: "https://facebook.com/ecaboratory",
-      icon: Facebook,
-    },
-    {
-      label: "Twitter",
-      href: "https://twitter.com/ecti",
-      icon: Twitter,
-    },
-    {
-      label: "LinkedIn",
-      href: "https://linkedin.com/company/ecti",
-      icon: Linkedin,
-    },
-    {
-      label: "Email",
-      href: "mailto:info@ecti.or.th",
-      icon: Mail,
-    },
+  type FooterIcon = React.ComponentType<{
+    className?: string;
+    "aria-hidden"?: boolean | "true" | "false";
+  }>;
+
+  const allSocial: { label: string; href: string | null; icon: FooterIcon }[] = [
+    { label: "Facebook", href: social.facebook, icon: Facebook },
+    { label: "X", href: social.x, icon: XIcon },
+    { label: "LinkedIn", href: social.linkedin, icon: Linkedin },
+    { label: "YouTube", href: social.youtube, icon: Youtube },
   ];
+
+  const socialLinks = allSocial.filter(
+    (s): s is { label: string; href: string; icon: FooterIcon } => Boolean(s.href)
+  );
 
   return (
     <footer className="border-t border-border bg-primary text-primary-foreground" role="contentinfo">
@@ -108,16 +113,16 @@ export function SiteFooter({ locale, dict }: SiteFooterProps) {
               {dict.footer.followUs}
             </h3>
             <div className="flex items-center gap-2">
-              {socialLinks.map((social) => (
+              {socialLinks.map((item) => (
                 <a
-                  key={social.label}
-                  href={social.href}
+                  key={item.label}
+                  href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-foreground/10 text-primary-foreground/60 transition-colors hover:bg-primary-foreground/20 hover:text-primary-foreground focus-visible:bg-primary-foreground/20 focus-visible:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/30"
-                  aria-label={social.label}
+                  aria-label={item.label}
                 >
-                  <social.icon className="h-4 w-4" aria-hidden="true" />
+                  <item.icon className="h-4 w-4" aria-hidden="true" />
                 </a>
               ))}
             </div>

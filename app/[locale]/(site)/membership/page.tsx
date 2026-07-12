@@ -39,6 +39,7 @@ import {
   fetchMemberTypes,
   fetchQuestions,
 } from "@/lib/membership-data";
+import { getApplyLink } from "@/lib/apply-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -65,11 +66,12 @@ export default async function MembershipPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
-  const [apiBenefits, apiHowToJoins, apiMemberTypes, apiQuestions] = await Promise.all([
+  const [apiBenefits, apiHowToJoins, apiMemberTypes, apiQuestions, applyUrl] = await Promise.all([
     fetchBenefits(locale),
     fetchHowToJoins(locale),
     fetchMemberTypes(locale),
     fetchQuestions(locale),
+    getApplyLink(locale),
   ]);
 
   const finalBenefits = apiBenefits.length > 0
@@ -354,10 +356,17 @@ export default async function MembershipPage({ params }: PageProps) {
             asChild
             className="bg-accent text-accent-foreground hover:bg-accent/90"
           >
-            <Link href={`/${locale}/contact`}>
-              {dict.membership.ctaButton}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            {applyUrl ? (
+              <a href={applyUrl} target="_blank" rel="noopener noreferrer">
+                {dict.membership.ctaButton}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+            ) : (
+              <Link href={`/${locale}/contact`}>
+                {dict.membership.ctaButton}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            )}
           </Button>
         </section>
       </div>

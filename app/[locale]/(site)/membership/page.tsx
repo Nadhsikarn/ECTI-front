@@ -157,6 +157,18 @@ export default async function MembershipPage({ params }: PageProps) {
   const iconForKey = (key: string | null) =>
     key === "student" ? GraduationCap : key === "corporate" ? Building2 : Users;
 
+  const hasBankInfo = !!(
+    payment &&
+    (payment.bank_name ||
+      payment.bank_branch ||
+      payment.account_name ||
+      payment.account_number ||
+      payment.swift_code)
+  );
+  const hasChannels = !!(
+    payment && (payment.online_portal_url || payment.payment_email)
+  );
+
   return (
     <>
       <PageHeader
@@ -256,7 +268,7 @@ export default async function MembershipPage({ params }: PageProps) {
                         colSpan={4}
                         className="px-4 py-8 text-center text-sm text-muted-foreground"
                       >
-                        {locale === "th" ? "ข้อมูลกำลังปรับปรุง" : "Information coming soon"}
+                        {dict.membership.typesEmpty}
                       </TableCell>
                     </TableRow>
                   )}
@@ -326,7 +338,7 @@ export default async function MembershipPage({ params }: PageProps) {
           </div>
         </section>
 
-        {payment && (
+        {payment && (hasBankInfo || hasChannels) && (
           <>
             <Separator className="mb-20" />
 
@@ -336,6 +348,7 @@ export default async function MembershipPage({ params }: PageProps) {
                 {dict.membership.paymentTitle}
               </h2>
               <div className="grid gap-6 lg:grid-cols-2">
+                {hasBankInfo && (
                 <Card className="border-border">
                   <CardHeader className="flex flex-row items-center gap-3 space-y-0">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -355,7 +368,9 @@ export default async function MembershipPage({ params }: PageProps) {
                     </dl>
                   </CardContent>
                 </Card>
+                )}
 
+                {hasChannels && (
                 <Card className="border-border">
                   <CardHeader className="flex flex-row items-center gap-3 space-y-0">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -413,6 +428,7 @@ export default async function MembershipPage({ params }: PageProps) {
                     )}
                   </CardContent>
                 </Card>
+                )}
               </div>
               {payment.note && (
                 <p className="mt-4 text-sm italic text-muted-foreground">

@@ -119,7 +119,7 @@ export async function fetchQuestions(locale: string): Promise<Question[]> {
 export async function fetchMembershipPayment(locale: string): Promise<MembershipPayment | null> {
   const data = await fetchAPI(`/api/membership-payment?locale=${locale}`);
   if (!data || Array.isArray(data)) return null;
-  return {
+  const payment: MembershipPayment = {
     bank_name: data.bank_name || "",
     bank_branch: data.bank_branch || "",
     account_name: data.account_name || "",
@@ -129,6 +129,9 @@ export async function fetchMembershipPayment(locale: string): Promise<Membership
     online_portal_url: data.online_portal_url || "",
     note: data.note || "",
   };
+  // Hide the whole block when an editor created the entry but left it empty.
+  const hasContent = Object.values(payment).some((v) => v.trim() !== "");
+  return hasContent ? payment : null;
 }
 
 export async function fetchMembershipCredit(locale: string): Promise<MembershipCredit | null> {

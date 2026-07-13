@@ -31,6 +31,12 @@ import {
   Send,
   CheckCircle2,
   ArrowRight,
+  Coins,
+  Landmark,
+  Mail,
+  Globe,
+  Download,
+  ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -38,11 +44,34 @@ import {
   fetchHowToJoins,
   fetchMemberTypes,
   fetchQuestions,
+  fetchMembershipPayment,
+  fetchMembershipCredit,
+  fetchMembershipDocuments,
 } from "@/lib/membership-data";
 import { getApplyLink } from "@/lib/apply-data";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
+}
+
+function PaymentRow({
+  label,
+  value,
+  mono,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
+  if (!value) return null;
+  return (
+    <div className="flex justify-between gap-4">
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className={`text-right font-medium text-foreground${mono ? " font-mono" : ""}`}>
+        {value}
+      </dd>
+    </div>
+  );
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -66,12 +95,24 @@ export default async function MembershipPage({ params }: PageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
 
-  const [apiBenefits, apiHowToJoins, apiMemberTypes, apiQuestions, applyUrl] = await Promise.all([
+  const [
+    apiBenefits,
+    apiHowToJoins,
+    apiMemberTypes,
+    apiQuestions,
+    applyUrl,
+    payment,
+    credit,
+    documents,
+  ] = await Promise.all([
     fetchBenefits(locale),
     fetchHowToJoins(locale),
     fetchMemberTypes(locale),
     fetchQuestions(locale),
     getApplyLink(locale),
+    fetchMembershipPayment(locale),
+    fetchMembershipCredit(locale),
+    fetchMembershipDocuments(locale),
   ]);
 
   const finalBenefits = apiBenefits.length > 0
@@ -107,6 +148,14 @@ export default async function MembershipPage({ params }: PageProps) {
     : fallbackFaqs;
 
   const finalMemberTypes = apiMemberTypes.length > 0 ? apiMemberTypes : null;
+
+  const formatFee = (value: number | null) =>
+    value === null || value === undefined
+      ? dict.membership.feeUnknown
+      : `${value.toLocaleString()} ${dict.membership.feeUnit}`;
+
+  const iconForKey = (key: string | null) =>
+    key === "student" ? GraduationCap : key === "corporate" ? Building2 : Users;
 
   return (
     <>
@@ -160,122 +209,85 @@ export default async function MembershipPage({ params }: PageProps) {
                       {dict.membership.colEligibility}
                     </TableHead>
                     <TableHead className="px-4 py-3 text-center font-semibold text-foreground">
-                      {dict.membership.colAnnualFee}
+                      {dict.membership.colMembershipFee}
                     </TableHead>
                     <TableHead className="px-4 py-3 text-center font-semibold text-foreground">
-                      {dict.membership.colLifetimeFee}
+                      {dict.membership.colEntranceFee}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {finalMemberTypes ? (
-                    finalMemberTypes.map((type, i) => (
-                      <TableRow key={i}>
-                        <TableCell className="px-4 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                              {type.iconUrl ? (
-                                <img src={type.iconUrl} alt={type.type} className="h-5 w-5 object-contain" />
-                              ) : (
-                                <Users className="h-5 w-5 text-primary" />
-                              )}
+                    finalMemberTypes.map((type, i) => {
+                      const Icon = iconForKey(type.key);
+                      return (
+                        <TableRow key={i}>
+                          <TableCell className="px-4 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                                {type.iconUrl ? (
+                                  <img src={type.iconUrl} alt={type.type} className="h-5 w-5 object-contain" />
+                                ) : (
+                                  <Icon className="h-5 w-5 text-primary" />
+                                )}
+                              </div>
+                              <span className="font-medium text-foreground">{type.type}</span>
                             </div>
-                            <span className="font-medium text-foreground">{type.type}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                          {type.eligibility}
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                            {type.annual_fee} THB
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="outline" className="border-primary/30 text-primary">
-                            {type.lifetime_fee} THB
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                          </TableCell>
+                          <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
+                            {type.eligibility}
+                          </TableCell>
+                          <TableCell className="px-4 py-4 text-center">
+                            <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                              {formatFee(type.membership_fee)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="px-4 py-4 text-center">
+                            <Badge variant="outline" className="border-primary/30 text-primary">
+                              {formatFee(type.entrance_fee)}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
                   ) : (
-                    <>
-                      <TableRow>
-                        <TableCell className="px-4 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
-                              <GraduationCap className="h-5 w-5 text-chart-4" />
-                            </div>
-                            <span className="font-medium text-foreground">{dict.membership.typeStudent}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                          {dict.membership.eligibilityStudent}
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                            {dict.membership.feeStudentAnnual}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="outline" className="border-primary/30 text-primary">
-                            {dict.membership.feeStudentLifetime}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="px-4 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                              <Users className="h-5 w-5 text-primary" />
-                            </div>
-                            <span className="font-medium text-foreground">{dict.membership.typeProfessional}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                          {dict.membership.eligibilityProfessional}
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                            {dict.membership.feeProfessionalAnnual}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="outline" className="border-primary/30 text-primary">
-                            {dict.membership.feeProfessionalLifetime}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="px-4 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10">
-                              <Building2 className="h-5 w-5 text-accent" />
-                            </div>
-                            <span className="font-medium text-foreground">{dict.membership.typeInstitutional}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-xs px-4 py-4 text-sm text-muted-foreground" style={{ whiteSpace: "normal" }}>
-                          {dict.membership.eligibilityInstitutional}
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                            {dict.membership.feeInstitutionalAnnual}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-center">
-                          <Badge variant="outline" className="border-primary/30 text-primary">
-                            {dict.membership.feeInstitutionalLifetime}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    </>
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="px-4 py-8 text-center text-sm text-muted-foreground"
+                      >
+                        {locale === "th" ? "ข้อมูลกำลังปรับปรุง" : "Information coming soon"}
+                      </TableCell>
+                    </TableRow>
                   )}
                 </TableBody>
               </Table>
             </CardContent>
           </Card>
         </section>
+
+        {credit && (
+          <>
+            <Separator className="mb-20" />
+
+            {/* --- ECTI Credits --- */}
+            <section className="mb-20">
+              <h2 className="mb-8 text-2xl font-bold text-foreground md:text-3xl">
+                {credit.title || dict.membership.creditsTitle}
+              </h2>
+              <Card className="border-border">
+                <CardContent className="flex items-start gap-4 p-6">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                    <Coins className="h-6 w-6 text-primary" />
+                  </div>
+                  <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+                    {credit.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </section>
+          </>
+        )}
 
         <Separator className="mb-20" />
 
@@ -313,6 +325,140 @@ export default async function MembershipPage({ params }: PageProps) {
             ))}
           </div>
         </section>
+
+        {payment && (
+          <>
+            <Separator className="mb-20" />
+
+            {/* --- Payment & Application Channels --- */}
+            <section className="mb-20">
+              <h2 className="mb-8 text-2xl font-bold text-foreground md:text-3xl">
+                {dict.membership.paymentTitle}
+              </h2>
+              <div className="grid gap-6 lg:grid-cols-2">
+                <Card className="border-border">
+                  <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                      <Landmark className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg">
+                      {dict.membership.paymentBankTitle}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <dl className="space-y-3 text-sm">
+                      <PaymentRow label={dict.membership.paymentBankLabel} value={payment.bank_name} />
+                      <PaymentRow label={dict.membership.paymentBranchLabel} value={payment.bank_branch} />
+                      <PaymentRow label={dict.membership.paymentAccountNameLabel} value={payment.account_name} />
+                      <PaymentRow label={dict.membership.paymentAccountNoLabel} value={payment.account_number} mono />
+                      <PaymentRow label={dict.membership.paymentSwiftLabel} value={payment.swift_code} mono />
+                    </dl>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border">
+                  <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                      <Send className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg">
+                      {dict.membership.channelsTitle}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-5">
+                    {payment.online_portal_url && (
+                      <div>
+                        <div className="mb-1 flex items-center gap-2 font-medium text-foreground">
+                          <Globe className="h-4 w-4 text-primary" />
+                          {dict.membership.channelOnlineTitle}
+                        </div>
+                        <p className="mb-2 text-sm text-muted-foreground">
+                          {dict.membership.channelOnlineDesc}
+                        </p>
+                        <Button asChild size="sm" variant="outline">
+                          {applyUrl ? (
+                            <a
+                              href={applyUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {dict.membership.channelOnlineButton}
+                              <ExternalLink className="ml-2 h-3.5 w-3.5" />
+                            </a>
+                          ) : (
+                            <Link href={`/${locale}/contact`}>
+                              {dict.membership.channelOnlineButton}
+                              <ExternalLink className="ml-2 h-3.5 w-3.5" />
+                            </Link>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                    {payment.payment_email && (
+                      <div>
+                        <div className="mb-1 flex items-center gap-2 font-medium text-foreground">
+                          <Mail className="h-4 w-4 text-primary" />
+                          {dict.membership.channelEmailTitle}
+                        </div>
+                        <p className="text-sm leading-relaxed text-muted-foreground">
+                          {dict.membership.channelEmailDesc}{" "}
+                          <a
+                            href={`mailto:${payment.payment_email}`}
+                            className="font-medium text-primary hover:underline"
+                          >
+                            {payment.payment_email}
+                          </a>
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+              {payment.note && (
+                <p className="mt-4 text-sm italic text-muted-foreground">
+                  * {payment.note}
+                </p>
+              )}
+            </section>
+          </>
+        )}
+
+        {documents.length > 0 && (
+          <>
+            <Separator className="mb-20" />
+
+            {/* --- Downloadable Documents --- */}
+            <section className="mb-20">
+              <h2 className="mb-8 text-2xl font-bold text-foreground md:text-3xl">
+                {dict.membership.documentsTitle}
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {documents.map((doc) => (
+                  <a
+                    key={doc.id}
+                    href={doc.fileUrl ?? "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                      <FileText className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-medium text-foreground">
+                        {doc.title}
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-primary">
+                        <Download className="h-3 w-3" />
+                        {dict.membership.documentsDownload}
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          </>
+        )}
 
         <Separator className="mb-20" />
 

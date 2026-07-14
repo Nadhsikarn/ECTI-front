@@ -288,8 +288,8 @@ const dictionaries = {
       journalCITDesc:"วารสารที่ครอบคลุมงานวิจัยด้านวิทยาการคอมพิวเตอร์และเทคโนโลยีสารสนเทศ",
       journalARD: "ECTI Journal on Applied Research and Development (ECTI-ARD)",
       journalARDDesc:"วารสารที่ครอบคลุมงานวิจัยด้านการประยุกต์ใช้เทคโนโลยีวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ และสารสนเทศ เพื่อนำไปสู่นวัตกรรมที่เป็นประโยชน์",
-      proceedingsTitle: "เอกสารการประชุมวิชาการ",
-      proceedingsText:"รวบรวมบทความวิจัยจากการประชุมวิชาการ ECTI-CON และงานประชุมอื่นๆ ที่จัดโดยสมาคม",
+      conferencesTitle: "งานประชุมวิชาการที่จัดเป็นประจำ",
+      conferencesYearsLabel: "ปีที่จัด",
     },
     resources: {
       title: "แหล่งข้อมูล",
@@ -606,9 +606,8 @@ const dictionaries = {
       journalARD: "ECTI Journal on Applied Research and Development (ECTI-ARD)",
       journalARDDesc:
         "A journal covering applied research in electrical engineering, electronics, computer, and information technology, driving innovation for practical benefit.",
-      proceedingsTitle: "Conference Proceedings",
-      proceedingsText:
-        "Collection of research papers from ECTI-CON and other conferences organized by the association.",
+      conferencesTitle: "Our Regular Conferences",
+      conferencesYearsLabel: "Years held",
     },
     resources: {
       title: "Resources",

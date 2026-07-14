@@ -9,7 +9,6 @@ import {
   X,
   ArrowRight,
   Clock,
-  CalendarCheck,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -408,20 +407,16 @@ function EventCard({
         )}
 
         {/* Actions */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <Button variant="outline" size="sm" className="gap-1.5" disabled>
-            {dict.events.btnDetails}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Button>
-          {event.register_url && event.status !== "finished" && (
+        {event.register_url && (
+          <div className="flex flex-wrap items-center gap-2 pt-1">
             <a href={event.register_url} target="_blank" rel="noopener noreferrer">
-              <Button size="sm" className={`gap-1.5 ${event.status === "open" ? "bg-red-600 hover:bg-red-700 text-white" : ""}`}>
-                <CalendarCheck className="h-3.5 w-3.5" />
-                {event.status === "open" ? dict.events.btnSubmitPaper : dict.events.btnRegister}
+              <Button variant="outline" size="sm" className="gap-1.5">
+                {dict.events.btnDetails}
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </a>
-          )}
-        </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

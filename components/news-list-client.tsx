@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { NEWS_TAGS } from "@/lib/news-data";
 import type { NewsPost, NewsTag } from "@/lib/news-data";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { NewsCard, getTagLabel, getTagStyle } from "@/components/news-card";
@@ -43,14 +44,6 @@ export function NewsListClient({
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
   const isTh = locale === "th";
-
-  const allTags: NewsTag[] = [
-    "announcements",
-    "cfp",
-    "academic",
-    "training",
-    "article",
-  ];
 
   const filtered = useMemo(() => {
     let result = [...posts];
@@ -143,7 +136,7 @@ export function NewsListClient({
           >
             {dict.news.tagAll}
           </Button>
-          {allTags.map((tag) => (
+          {NEWS_TAGS.map((tag) => (
             <Button
               key={tag}
               variant={activeTag === tag ? "default" : "outline"}

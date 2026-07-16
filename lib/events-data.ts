@@ -54,7 +54,7 @@ export async function fetchEventBySlug(slug: string, locale: string) {
   return {
     slug: attr.slug ?? item.id.toString(),
     title: attr.title,
-    date: formatDate(attr.event_start_date, locale),
+    date: formatDateRange(attr.event_start_date, attr.event_end_date, locale),
     location: attr.location ?? "",
     description: attr.description?.[0]?.children?.[0]?.text || "",
     overview: "",
@@ -93,7 +93,7 @@ export async function fetchEventsFromAPI(locale: string): Promise<ECTIEvent[]> {
     return {
       slug: attr.slug ?? item.id.toString(),
       title: attr.title,
-      date: formatDate(attr.event_start_date, locale),
+      date: formatDateRange(attr.event_start_date, attr.event_end_date, locale),
       location: attr.location ?? "",
       description: attr.description?.[0]?.children?.[0]?.text || "",
       overview: "",

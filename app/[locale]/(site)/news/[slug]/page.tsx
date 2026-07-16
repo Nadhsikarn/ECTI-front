@@ -20,8 +20,8 @@ import {
   getNewsPostBySlug,
   getRelatedPosts,
 } from "@/lib/news-data";
-import type { NewsTag } from "@/lib/news-data";
 import { NewsShareButton } from "@/components/news-share-button";
+import { getTagLabel, getTagStyle } from "@/components/news-card";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -45,27 +45,6 @@ export async function generateMetadata({ params }: PageProps) {
     title: `${post.title} | ${dict.news.title}`,
     description: post.summary,
   };
-}
-
-function getTagLabel(tag: NewsTag, dict: ReturnType<typeof getDictionary>): string {
-  const map: Record<NewsTag, string> = {
-    announcements: dict.news.tagAnnouncements,
-    cfp: dict.news.tagCfp,
-    awards: dict.news.tagAwards,
-    publications: dict.news.tagPublications,
-    article: dict.news.tagArticle,
-  };
-  return map[tag];
-}
-
-function getTagStyle(tag: NewsTag): string {
-  switch (tag) {
-    case "announcements": return "bg-primary/10 text-primary border-primary/20";
-    case "cfp": return "bg-accent/10 text-accent border-accent/20";
-    case "awards": return "bg-chart-5/10 text-chart-5 border-chart-5/20";
-    case "publications": return "bg-chart-4/10 text-chart-4 border-chart-4/20";
-    case "article": return "bg-chart-3/10 text-chart-3 border-chart-3/20";
-  }
 }
 
 export default async function NewsDetailPage({ params }: PageProps) {

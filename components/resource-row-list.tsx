@@ -25,11 +25,11 @@ export function ResourceRowList({
 }: ResourceRowListProps) {
   return (
     <ul className="flex flex-col gap-3">
-      {items.map((item) => {
+      {items.map((item, i) => {
         const title =
           locale === "en" && item.titleEn ? item.titleEn : item.title;
         return (
-          <li key={item.href}>
+          <li key={`${item.href}-${i}`}>
             <a
               href={item.href}
               target="_blank"

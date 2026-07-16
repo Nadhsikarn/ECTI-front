@@ -315,7 +315,6 @@ const dictionaries = {
       archiveDesc: "นิตยสาร ECTI ย้อนหลัง และวารสาร ECTI เพื่ออุตสาหกรรม",
       catMagazine: "นิตยสาร ECTI (E-Magazine)",
       catIndustry: "วารสาร ECTI เพื่ออุตสาหกรรม",
-      catJournal: "วารสารวิชาการ (E-Journal)",
     },
     footer: {
       copyright: "สงวนลิขสิทธิ์",
@@ -642,7 +641,6 @@ const dictionaries = {
       archiveDesc: "Past ECTI e-magazines and the ECTI Journal for Industry.",
       catMagazine: "ECTI E-Magazine",
       catIndustry: "ECTI Journal for Industry",
-      catJournal: "Academic Journals (E-Journal)",
     },
     footer: {
       copyright: "All rights reserved",

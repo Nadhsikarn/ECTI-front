@@ -59,8 +59,11 @@ export async function getArchiveItems(locale: string): Promise<ArchiveGroups> {
     else magazines.push(mapped);
   }
 
-  return {
-    magazines: magazines.length > 0 ? magazines : eMagazines,
-    journals: journals.length > 0 ? journals : industryJournals,
-  };
+  // All-or-nothing: as soon as any archive item exists in the CMS, use the CMS
+  // for the whole page (empty categories simply render nothing) instead of
+  // silently mixing CMS rows with the legacy-site fallback in the same view.
+  if (magazines.length > 0 || journals.length > 0) {
+    return { magazines, journals };
+  }
+  return { magazines: eMagazines, journals: industryJournals };
 }

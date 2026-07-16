@@ -28,12 +28,12 @@ export function ResourceCollection({
 }: ResourceCollectionProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => {
+      {items.map((item, i) => {
         const title =
           locale === "en" && item.titleEn ? item.titleEn : item.title;
         return (
           <Card
-            key={item.href}
+            key={`${item.href}-${i}`}
             className="group border-border transition-shadow hover:shadow-md"
           >
             <CardContent className="flex h-full flex-col gap-3 p-5">

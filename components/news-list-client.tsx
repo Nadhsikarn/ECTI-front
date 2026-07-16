@@ -47,8 +47,8 @@ export function NewsListClient({
   const allTags: NewsTag[] = [
     "announcements",
     "cfp",
-    "awards",
-    "publications",
+    "academic",
+    "training",
     "article",
   ];
 

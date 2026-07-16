@@ -9,8 +9,8 @@ export function getTagLabel(tag: NewsTag, dict: Dictionary): string {
   const map: Record<NewsTag, string> = {
     announcements: dict.news.tagAnnouncements,
     cfp: dict.news.tagCfp,
-    awards: dict.news.tagAwards,
-    publications: dict.news.tagPublications,
+    academic: dict.news.tagAcademic,
+    training: dict.news.tagTraining,
     article: dict.news.tagArticle,
   };
   return map[tag];
@@ -22,9 +22,9 @@ export function getTagStyle(tag: NewsTag): string {
       return "bg-primary/10 text-primary border-primary/20";
     case "cfp":
       return "bg-accent/10 text-accent border-accent/20";
-    case "awards":
+    case "academic":
       return "bg-chart-5/10 text-chart-5 border-chart-5/20";
-    case "publications":
+    case "training":
       return "bg-chart-4/10 text-chart-4 border-chart-4/20";
     case "article":
       return "bg-chart-3/10 text-chart-3 border-chart-3/20";

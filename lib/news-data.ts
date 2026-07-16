@@ -1,11 +1,22 @@
 const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").replace(/\/+$/, "");
 
-export type NewsTag =
-  | "announcements"
-  | "cfp"
-  | "awards"
-  | "publications"
-  | "article";
+export const NEWS_TAGS = [
+  "announcements",
+  "cfp",
+  "academic",
+  "training",
+  "article",
+] as const;
+
+export type NewsTag = (typeof NEWS_TAGS)[number];
+
+// Drop keys the CMS still holds but the front no longer knows (e.g. a tag whose
+// enum value was removed), so a stale key renders nothing instead of a blank badge.
+function toNewsTags(raw: any): NewsTag[] {
+  return (raw ?? [])
+    .map((t: any) => t.key)
+    .filter((key: any): key is NewsTag => NEWS_TAGS.includes(key));
+}
 
 export interface NewsPost {
   id: number;
@@ -35,7 +46,7 @@ export async function getNewsPosts(locale: string): Promise<NewsPost[]> {
       summary: item.summary ?? "",
       body: item.body ?? [],
       date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
-      tags: (item.tags ?? []).map((t: any) => t.key as NewsTag).filter(Boolean),
+      tags: toNewsTags(item.tags),
       author: item.author ?? undefined,
       readTimeMin: item.read_time_min ?? 1,
     }));
@@ -57,7 +68,7 @@ export async function getNewsPostBySlug(slug: string, locale: string): Promise<N
     summary: item.summary ?? "",
     body: item.body ?? [],
     date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
-    tags: (item.tags ?? []).map((t: any) => t.key as NewsTag).filter(Boolean),
+    tags: toNewsTags(item.tags),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
   };
@@ -73,8 +84,4 @@ export async function getRelatedPosts(
   return all
     .filter((p) => p.slug !== currentSlug && p.tags.some((t) => tags.includes(t)))
     .slice(0, limit);
-}
-
-export function getAllTags(): NewsTag[] {
-  return ["announcements", "cfp", "awards", "publications", "article"];
 }

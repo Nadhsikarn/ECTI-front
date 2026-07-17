@@ -114,6 +114,7 @@ export default async function AboutPage({ params }: PageProps) {
   }));
 
   const boardMembers = rawMembers.map((m) => ({
+    id: m.id,
     name: m.name,
     role: m.role,
     institution: m.institution,

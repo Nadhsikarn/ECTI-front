@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 
 interface BoardMember {
+  id: number;
   name: string;
   role: string;
   institution: string;
@@ -117,7 +118,7 @@ export function BoardFilter({ members, labels }: BoardFilterProps) {
       {/* คนอื่นๆ */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {others.map((member) => (
-          <MemberCard key={member.name} member={member} />
+          <MemberCard key={member.id} member={member} />
         ))}
       </div>
     </div>

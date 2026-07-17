@@ -9,17 +9,17 @@ export interface BoardMember {
   image: { url: string } | null;
 }
 
-export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
-  const res = await fetch(
-    `${BASE_URL}/api/board-members?populate=image&locale=${locale}&sort=id:asc&pagination[pageSize]=100`,
-    { next: { revalidate: 0 } }
-  );
+// Strapi caps pageSize at 100. Board members accumulate per term (~18/term),
+// so a single page would silently drop the newest term once the roster passes
+// 100 — page through all of them instead.
+const BOARD_PAGE_SIZE = 100;
 
-  if (!res.ok) return [];
+function boardMembersUrl(locale: string, page: number): string {
+  return `${BASE_URL}/api/board-members?populate=image&locale=${locale}&sort=id:asc&pagination[pageSize]=${BOARD_PAGE_SIZE}&pagination[page]=${page}`;
+}
 
-  const json = await res.json();
-
-  return json.data.map((item: any) => ({
+function mapBoardMember(item: any): BoardMember {
+  return {
     id: item.id,
     name: item.name,
     role: item.role,
@@ -29,7 +29,29 @@ export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
     image: item.image
       ? { url: item.image.url.startsWith("http") ? item.image.url : `${BASE_URL}${item.image.url}` }
       : null,
-  }));
+  };
+}
+
+export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
+  const first = await fetch(boardMembersUrl(locale, 1), { next: { revalidate: 0 } });
+  if (!first.ok) return [];
+
+  const json = await first.json();
+  const items: any[] = [...json.data];
+
+  const pageCount: number = json.meta?.pagination?.pageCount ?? 1;
+  if (pageCount > 1) {
+    const rest = await Promise.all(
+      Array.from({ length: pageCount - 1 }, (_, i) =>
+        fetch(boardMembersUrl(locale, i + 2), { next: { revalidate: 0 } }).then((res) =>
+          res.ok ? res.json().then((j) => j.data as any[]) : []
+        )
+      )
+    );
+    for (const page of rest) items.push(...page);
+  }
+
+  return items.map(mapBoardMember);
 }
 
 export interface Milestone {

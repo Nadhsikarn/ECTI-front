@@ -114,10 +114,11 @@ export default async function AboutPage({ params }: PageProps) {
   }));
 
   const boardMembers = rawMembers.map((m) => ({
+    id: m.id,
     name: m.name,
     role: m.role,
     institution: m.institution,
-    committee: m.committee,
+    term: m.term,
     image: m.image
       ? m.image.url  // ใช้ URL ตรงๆ เลย ไม่ต้องต่อ env
       : "/images/placeholder.jpg",
@@ -260,12 +261,7 @@ export default async function AboutPage({ params }: PageProps) {
           </h2>
           <BoardFilter
             members={boardMembers}
-            labels={{
-              all: dict.about.boardFilterAll,
-              exec: dict.about.boardFilterExec,
-              academic: dict.about.boardFilterAcademic,
-              publications: dict.about.boardFilterPublications,
-            }}
+            labels={{ term: dict.about.boardFilterTerm }}
           />
         </section>
       </div>

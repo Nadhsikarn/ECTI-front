@@ -5,13 +5,13 @@ export interface BoardMember {
   name: string;
   role: string;
   institution: string;
-  committee: "exec" | "academic" | "publications";
+  term: string | null;
   image: { url: string } | null;
 }
 
 export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
   const res = await fetch(
-    `${BASE_URL}/api/board-members?populate=image&locale=${locale}`,
+    `${BASE_URL}/api/board-members?populate=image&locale=${locale}&sort=id:asc&pagination[pageSize]=100`,
     { next: { revalidate: 0 } }
   );
 
@@ -24,8 +24,11 @@ export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
     name: item.name,
     role: item.role,
     institution: item.institution,
-    committee: item.committee,
-    image: item.image ?? null,
+    term: item.term ?? null,
+    // Local Strapi returns relative media URLs; Strapi Cloud returns absolute ones
+    image: item.image
+      ? { url: item.image.url.startsWith("http") ? item.image.url : `${BASE_URL}${item.image.url}` }
+      : null,
   }));
 }
 

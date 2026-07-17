@@ -74,9 +74,11 @@ export async function fetchEventBySlug(slug: string, locale: string) {
 }
 
 // func fetch
+// Ordered newest-first here rather than in the client: EventsListClient re-sorts
+// by status with a stable sort, so this date order survives within each status group.
 export async function fetchEventsFromAPI(locale: string): Promise<ECTIEvent[]> {
   const res = await fetch(
-    `${API_URL}?populate=*&locale=${locale}`,
+    `${API_URL}?populate=*&sort=event_start_date:desc&locale=${locale}`,
     { cache: "no-store" }
   );
 

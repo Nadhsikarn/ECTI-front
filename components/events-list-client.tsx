@@ -72,6 +72,20 @@ function getTypeLabel(type: EventType, dict: Dictionary): string {
   return map[type];
 }
 
+// Every filter defaults to "all", so SelectValue's placeholder never renders and
+// each trigger would just read "ทั้งหมด". Pass the label through as children
+// instead, which Radix renders in place of the selected item's text. Keep this a
+// direct child of SelectTrigger — the trigger styles the select-value slot with
+// direct-child selectors.
+function FilterValue({ label, value }: { label: string; value: string }) {
+  return (
+    <SelectValue>
+      <span className="text-muted-foreground">{label}:</span>
+      {value}
+    </SelectValue>
+  );
+}
+
 export function EventsListClient({
   locale,
   dict,
@@ -155,8 +169,11 @@ export function EventsListClient({
         <div className="flex flex-wrap items-center gap-3">
           {/* Year */}
           <Select value={yearFilter} onValueChange={setYearFilter}>
-            <SelectTrigger className="w-[130px]">
-              <SelectValue placeholder={dict.events.filterYear} />
+            <SelectTrigger className="w-[150px]">
+              <FilterValue
+                label={dict.events.filterYear}
+                value={yearFilter === "all" ? dict.events.filterAll : yearFilter}
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{dict.events.filterAll}</SelectItem>
@@ -170,8 +187,15 @@ export function EventsListClient({
 
           {/* Type */}
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={dict.events.filterType} />
+            <SelectTrigger className="w-[250px]">
+              <FilterValue
+                label={dict.events.filterType}
+                value={
+                  typeFilter === "all"
+                    ? dict.events.filterAll
+                    : getTypeLabel(typeFilter as EventType, dict)
+                }
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{dict.events.filterAll}</SelectItem>
@@ -183,8 +207,15 @@ export function EventsListClient({
 
           {/* Status */}
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={dict.events.filterStatus} />
+            <SelectTrigger className="w-[210px]">
+              <FilterValue
+                label={dict.events.filterStatus}
+                value={
+                  statusFilter === "all"
+                    ? dict.events.filterAll
+                    : getStatusLabel(statusFilter as EventStatus, dict)
+                }
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{dict.events.filterAll}</SelectItem>
@@ -197,8 +228,13 @@ export function EventsListClient({
 
           {/* Location */}
           <Select value={locationFilter} onValueChange={setLocationFilter}>
-            <SelectTrigger className="w-[240px]">
-              <SelectValue placeholder={dict.events.filterLocation} />
+            <SelectTrigger className="w-[280px]">
+              <FilterValue
+                label={dict.events.filterLocation}
+                value={
+                  locationFilter === "all" ? dict.events.filterAll : locationFilter
+                }
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{dict.events.filterAll}</SelectItem>

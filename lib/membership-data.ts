@@ -1,3 +1,5 @@
+import { absoluteMediaUrl } from "@/lib/strapi-media";
+
 const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").replace(/\/+$/, "");
 
 export interface Benefit {
@@ -87,7 +89,7 @@ export async function fetchHowToJoins(locale: string): Promise<HowtoJoin[]> {
       title: item.title || "",
       description: item.description || "",
       order: item.order ?? 0,
-      iconUrl: item.icon?.url ? `${BASE_URL}${item.icon.url}` : null,
+      iconUrl: item.icon?.url ? absoluteMediaUrl(item.icon.url) : null,
     }))
     .sort((a: HowtoJoin, b: HowtoJoin) => a.order - b.order);
 }
@@ -102,7 +104,7 @@ export async function fetchMemberTypes(locale: string): Promise<MemberType[]> {
     eligibility: item.eligibility || "",
     membership_fee: item.membership_fee ?? null,
     entrance_fee: item.entrance_fee ?? null,
-    iconUrl: item.icon?.url ? `${BASE_URL}${item.icon.url}` : null,
+    iconUrl: item.icon?.url ? absoluteMediaUrl(item.icon.url) : null,
   }));
 }
 
@@ -154,7 +156,7 @@ export async function fetchMembershipDocuments(locale: string): Promise<Membersh
         key: item.key ?? null,
         title: item.title || "",
         order: item.order ?? 0,
-        fileUrl: item.file?.url ? `${BASE_URL}${item.file.url}` : link,
+        fileUrl: item.file?.url ? absoluteMediaUrl(item.file.url) : link,
       };
     })
     .filter((d: MembershipDocument) => d.fileUrl) // hide rows without a file/link

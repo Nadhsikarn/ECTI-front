@@ -2,6 +2,7 @@ import {
   associationDocuments,
   type ResourceItem,
 } from "@/lib/resource-detail-data";
+import { absoluteMediaUrl } from "@/lib/strapi-media";
 
 const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").replace(
   /\/+$/,
@@ -38,7 +39,7 @@ export async function getAssociationDocuments(
   for (const item of items) {
     const link =
       typeof item.link === "string" && item.link.trim() ? item.link.trim() : null;
-    const href = item.file?.url ? `${BASE_URL}${item.file.url}` : link;
+    const href = item.file?.url ? absoluteMediaUrl(item.file.url) : link;
     if (!href) continue;
     mapped.push({ title: item.title || "", href, external: true });
   }

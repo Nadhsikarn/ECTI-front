@@ -59,7 +59,7 @@ export interface MembershipDocument {
 async function fetchAPI(endpoint: string) {
   try {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
-      cache: "no-store",
+      next: { revalidate: 3600 },
     });
     if (!res.ok) {
         return null;

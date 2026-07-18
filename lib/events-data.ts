@@ -39,7 +39,7 @@ export interface ECTIEvent {
 export async function fetchEventBySlug(slug: string, locale: string) {
   const res = await fetch(
     `${API_URL}?populate=*&filters[slug][$eq]=${slug}&locale=${locale}`,
-    { cache: "no-store" }
+    { next: { revalidate: 3600 } }
   );
 
   const json = await res.json();
@@ -79,7 +79,7 @@ export async function fetchEventBySlug(slug: string, locale: string) {
 export async function fetchEventsFromAPI(locale: string): Promise<ECTIEvent[]> {
   const res = await fetch(
     `${API_URL}?populate=*&sort=event_start_date:desc&locale=${locale}`,
-    { cache: "no-store" }
+    { next: { revalidate: 3600 } }
   );
 
   const json = await res.json();
@@ -150,7 +150,7 @@ export async function getFeaturedEvents(
 ): Promise<FeaturedEvent[]> {
   const res = await fetch(
     `${API_URL}?populate=*&sort=event_start_date:desc&pagination[limit]=${limit}&locale=${locale}`,
-    { cache: "no-store" }
+    { next: { revalidate: 3600 } }
   );
 
   if (!res.ok) return [];

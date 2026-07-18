@@ -23,7 +23,7 @@ function clean(url: unknown): string | null {
 export async function getSocialLinks(locale: string): Promise<SocialLinks> {
   try {
     const res = await fetch(`${BASE_URL}/api/social-link?locale=${locale}`, {
-      next: { revalidate: 0 },
+      next: { revalidate: 3600 },
     });
     if (!res.ok) return EMPTY;
     const json = await res.json();

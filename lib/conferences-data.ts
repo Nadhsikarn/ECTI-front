@@ -10,7 +10,7 @@ export interface Conference {
 export async function getConferences(locale: string): Promise<Conference[]> {
   const res = await fetch(
     `${BASE_URL}/api/conferences?sort=order:asc&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) return [];
   const json = await res.json();

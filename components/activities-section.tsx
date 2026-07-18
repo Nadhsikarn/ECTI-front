@@ -1,4 +1,4 @@
-import { Presentation, BookOpen, Network, Award } from "lucide-react";
+import { Presentation, BookOpen, Network, HandHeart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -27,7 +27,7 @@ export function ActivitiesSection({ dict }: ActivitiesSectionProps) {
       color: "bg-primary/10 text-primary",
     },
     {
-      icon: Award,
+      icon: HandHeart,
       title: dict.home.activityAward,
       description: dict.home.activityAwardDesc,
       color: "bg-accent/10 text-accent",

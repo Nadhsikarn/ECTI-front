@@ -69,8 +69,8 @@ const dictionaries = {
       activityNetwork: "เครือข่ายวิชาการ",
       activityNetworkDesc:
         "สร้างเครือข่ายความร่วมมือระหว่างนักวิจัย อาจารย์ และภาคอุตสาหกรรม",
-      activityAward: "รางวัลวิชาการ",
-      activityAwardDesc: "มอบรางวัลเพื่อยกย่องผลงานวิจัยและนักวิจัยดีเด่น",
+      activityAward: "งานบริการสังคม",
+      activityAwardDesc: "ให้บริการวิชาการและองค์ความรู้แก่สังคม ชุมชน และภาคอุตสาหกรรม",
       // Featured event
       sectionFeaturedEvent: "กิจกรรมเด่น",
       featuredEventTitle: "ECTI-CON 2026",
@@ -383,9 +383,9 @@ const dictionaries = {
       activityNetwork: "Academic Network",
       activityNetworkDesc:
         "Building collaborative networks among researchers, educators, and industry.",
-      activityAward: "Academic Awards",
+      activityAward: "Community Service",
       activityAwardDesc:
-        "Recognizing outstanding research contributions and researchers.",
+        "Providing academic services and knowledge to society and industry.",
       // Featured event
       sectionFeaturedEvent: "Featured Event",
       featuredEventTitle: "ECTI-CON 2026",

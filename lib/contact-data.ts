@@ -10,7 +10,7 @@ export interface ContactInfo {
 export async function getContact(locale: string): Promise<ContactInfo | null> {
   try {
     const res = await fetch(`${BASE_URL}/api/contact?locale=${locale}`, {
-      next: { revalidate: 0 },
+      next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
     const json = await res.json();

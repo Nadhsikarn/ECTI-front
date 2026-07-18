@@ -17,7 +17,7 @@ export interface ArchiveGroups {
 
 async function fetchAPI(endpoint: string) {
   try {
-    const res = await fetch(`${BASE_URL}${endpoint}`, { cache: "no-store" });
+    const res = await fetch(`${BASE_URL}${endpoint}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json?.data || [];

@@ -33,7 +33,7 @@ export interface NewsPost {
 export async function getNewsPosts(locale: string): Promise<NewsPost[]> {
   const res = await fetch(
     `${BASE_URL}/api/news-posts?populate=tags&sort=publishedAt:desc&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) return [];
   const json = await res.json();
@@ -55,7 +55,7 @@ export async function getNewsPosts(locale: string): Promise<NewsPost[]> {
 export async function getNewsPostBySlug(slug: string, locale: string): Promise<NewsPost | undefined> {
   const res = await fetch(
     `${BASE_URL}/api/news-posts?filters[slug][$eq]=${slug}&populate=tags&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) return undefined;
   const json = await res.json();

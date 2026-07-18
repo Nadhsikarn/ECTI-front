@@ -8,7 +8,7 @@ const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337").re
 export async function getApplyLink(locale: string): Promise<string | null> {
   try {
     const res = await fetch(`${BASE_URL}/api/membership-apply?locale=${locale}`, {
-      next: { revalidate: 0 },
+      next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
     const json = await res.json();

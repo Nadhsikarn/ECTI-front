@@ -33,7 +33,7 @@ function mapBoardMember(item: any): BoardMember {
 }
 
 export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
-  const first = await fetch(boardMembersUrl(locale, 1), { next: { revalidate: 0 } });
+  const first = await fetch(boardMembersUrl(locale, 1), { next: { revalidate: 3600 } });
   if (!first.ok) return [];
 
   const json = await first.json();
@@ -43,7 +43,7 @@ export async function getBoardMembers(locale: string): Promise<BoardMember[]> {
   if (pageCount > 1) {
     const rest = await Promise.all(
       Array.from({ length: pageCount - 1 }, (_, i) =>
-        fetch(boardMembersUrl(locale, i + 2), { next: { revalidate: 0 } }).then((res) =>
+        fetch(boardMembersUrl(locale, i + 2), { next: { revalidate: 3600 } }).then((res) =>
           res.ok ? res.json().then((j) => j.data as any[]) : []
         )
       )
@@ -64,7 +64,7 @@ export interface Milestone {
 export async function getMilestones(locale: string): Promise<Milestone[]> {
   const res = await fetch(
     `${BASE_URL}/api/milestones?sort=year:asc&locale=${locale}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) return [];
   const json = await res.json();
@@ -86,7 +86,7 @@ export async function getMissionVisionCards(locale: string): Promise<AboutCard[]
   try {
     const res = await fetch(
       `${BASE_URL}/api/mission-vision?populate=cards&locale=${locale}`,
-      { next: { revalidate: 0 } }
+      { next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
     const json = await res.json();
@@ -112,7 +112,7 @@ export async function getObjectives(locale: string): Promise<ObjectiveItem[]> {
   try {
     const res = await fetch(
       `${BASE_URL}/api/objective?populate=items&locale=${locale}`,
-      { next: { revalidate: 0 } }
+      { next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
     const json = await res.json();

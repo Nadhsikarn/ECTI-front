@@ -3,19 +3,9 @@ import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { ContactForm } from "@/components/contact-form";
 import { getContact } from "@/lib/contact-data";
-import {
-  MapPin,
-  Mail,
-  Phone,
-  Clock,
-  Facebook,
-  Twitter,
-  Linkedin,
-  Globe,
-} from "lucide-react";
+import { MapPin, Mail, Phone, Clock } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -75,13 +65,6 @@ export default async function ContactPage({ params }: PageProps) {
       text: officeHours,
       color: "bg-primary/10 text-primary",
     },
-  ];
-
-  const socialLinks = [
-    { icon: Facebook, label: "Facebook", href: "https://facebook.com/ecti" },
-    { icon: Twitter, label: "X (Twitter)", href: "https://x.com/ecti" },
-    { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/company/ecti" },
-    { icon: Globe, label: "ecti.or.th", href: "https://ecti.or.th" },
   ];
 
   return (
@@ -208,29 +191,6 @@ export default async function ContactPage({ params }: PageProps) {
                 </svg>
               </CardContent>
             </Card>
-          </div>
-        </section>
-
-        <Separator className="mb-16" />
-
-        {/* --- Social Links Block --- */}
-        <section className="text-center">
-          <h2 className="mb-6 text-2xl font-bold text-foreground">
-            {dict.contact.socialTitle}
-          </h2>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg border border-border bg-card px-5 py-3 text-sm font-medium text-foreground transition-all hover:border-primary/30 hover:bg-primary/5 hover:shadow-md"
-              >
-                <link.icon className="h-5 w-5 text-primary" />
-                {link.label}
-              </a>
-            ))}
           </div>
         </section>
       </div>

@@ -92,16 +92,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
         <div className="mt-6 grid gap-8 lg:grid-cols-3">
           <article className="lg:col-span-2">
-            {post.coverImage && (
-              <div className="mb-8 aspect-video w-full overflow-hidden rounded-lg border border-border bg-muted">
-                <img
-                  src={post.coverImage}
-                  alt={title}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            )}
-
+            {/* Cover image is the card preview only; images inside the article come from the body. */}
             <div className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <CalendarDays className="h-4 w-4 text-primary" />

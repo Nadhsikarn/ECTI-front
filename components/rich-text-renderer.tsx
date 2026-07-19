@@ -1,6 +1,8 @@
 // Renders Strapi rich-text "blocks" (the array of { type, children } nodes
 // produced by the blocks field) into styled React elements.
 
+import { absoluteMediaUrl } from "@/lib/strapi-media";
+
 // Recursive child node renderer
 function RenderChild({ child }: { child: any }) {
   if (child.type === "link") {
@@ -80,6 +82,25 @@ export function RichTextRenderer({ blocks }: { blocks: any[] }) {
                 ))}
               </blockquote>
             );
+          case "image": {
+            const img = block.image;
+            if (!img?.url) return null;
+            return (
+              <figure key={i} className="my-6">
+                <img
+                  src={absoluteMediaUrl(img.url)}
+                  alt={img.alternativeText || ""}
+                  loading="lazy"
+                  className="mx-auto h-auto max-w-full rounded-lg border border-border"
+                />
+                {img.caption && (
+                  <figcaption className="mt-2 text-center text-xs text-muted-foreground">
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            );
+          }
           default:
             return null;
         }

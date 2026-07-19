@@ -231,6 +231,8 @@ const dictionaries = {
       author: "ผู้เขียน",
       backToNews: "กลับไปหน้าข่าวสาร",
       minRead: "นาทีอ่าน",
+      attachmentsTitle: "เอกสารแนบ",
+      attachmentsDownload: "ดาวน์โหลด",
     },
     about: {
       title: "เกี่ยวกับ ECTI",
@@ -548,6 +550,8 @@ const dictionaries = {
       author: "Author",
       backToNews: "Back to News",
       minRead: "min read",
+      attachmentsTitle: "Attachments",
+      attachmentsDownload: "Download",
     },
     about: {
       title: "About ECTI",

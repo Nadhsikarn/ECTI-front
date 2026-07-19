@@ -14,6 +14,8 @@ import {
   User,
   CalendarDays,
   Tag,
+  FileText,
+  Download,
 } from "lucide-react";
 import {
   getNewsPosts,
@@ -90,13 +92,15 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
         <div className="mt-6 grid gap-8 lg:grid-cols-3">
           <article className="lg:col-span-2">
-            <div className="mb-6 flex flex-wrap items-center gap-2">
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className={`text-xs font-medium ${getTagStyle(tag)}`}>
-                  {getTagLabel(tag, dict)}
-                </Badge>
-              ))}
-            </div>
+            {post.coverImage && (
+              <div className="mb-8 aspect-video w-full overflow-hidden rounded-lg border border-border bg-muted">
+                <img
+                  src={post.coverImage}
+                  alt={title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
 
             <div className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
@@ -118,6 +122,38 @@ export default async function NewsDetailPage({ params }: PageProps) {
             <div className="prose prose-sm max-w-none">
               <RichTextRenderer blocks={body} />
             </div>
+
+            {post.attachments.length > 0 && (
+              <div className="mt-10">
+                <h2 className="mb-4 text-lg font-semibold text-foreground">
+                  {dict.news.attachmentsTitle}
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {post.attachments.map((doc) => (
+                    <a
+                      key={doc.id}
+                      href={doc.fileUrl ?? "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"
+                    >
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                        <FileText className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-medium text-foreground">
+                          {doc.title}
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-primary">
+                          <Download className="h-3 w-3" />
+                          {dict.news.attachmentsDownload}
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <Separator className="my-8" />
 

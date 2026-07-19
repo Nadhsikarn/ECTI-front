@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Tag, User } from "lucide-react";
+import { ArrowRight, Clock, Newspaper, Tag, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { NewsPost, NewsTag } from "@/lib/news-data";
@@ -51,7 +51,27 @@ export function NewsCard({
     : "";
 
   return (
-    <Card className="group flex flex-col border-border transition-shadow hover:shadow-lg">
+    <Card className="group flex flex-col gap-0 overflow-hidden border-border pt-0 transition-shadow hover:shadow-lg">
+      {/* Cover image (or branded placeholder when a post has none) */}
+      <Link
+        href={`/${locale}/news/${post.slug}`}
+        className="relative block aspect-video w-full overflow-hidden bg-muted"
+        aria-label={title}
+      >
+        {post.coverImage ? (
+          <img
+            src={post.coverImage}
+            alt={title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+            <Newspaper className="h-9 w-9 text-primary/30" />
+          </div>
+        )}
+      </Link>
+
       <CardContent className="flex flex-1 flex-col gap-3 p-5">
         {/* Tags */}
         <div className="flex flex-wrap items-center gap-1.5">

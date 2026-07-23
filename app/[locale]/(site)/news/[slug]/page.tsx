@@ -91,7 +91,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         </Link>
 
         <div className="mt-6 grid gap-8 lg:grid-cols-3">
-          <article className="lg:col-span-2">
+          <article className="rounded-xl border border-border bg-card p-6 shadow-sm lg:col-span-2 lg:p-8">
             {/* Cover image is the card preview only; images inside the article come from the body. */}
             <div className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">

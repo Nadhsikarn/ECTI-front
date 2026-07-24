@@ -23,6 +23,7 @@ import {
   getRelatedPosts,
 } from "@/lib/news-data";
 import { NewsShareButton } from "@/components/news-share-button";
+import { NewsStickyTitle } from "@/components/news-sticky-title";
 import { getTagLabel, getTagStyle } from "@/components/news-card";
 
 interface PageProps {
@@ -80,6 +81,8 @@ export default async function NewsDetailPage({ params }: PageProps) {
           { label: title.length > 40 ? title.slice(0, 40) + "..." : title },
         ]}
       />
+
+      <NewsStickyTitle title={title} />
 
       <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8 lg:py-14">
         <Link

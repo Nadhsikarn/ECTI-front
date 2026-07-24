@@ -8,16 +8,21 @@ export interface Journal {
 }
 
 export async function getJournals(locale: string): Promise<Journal[]> {
-  const res = await fetch(
-    `${BASE_URL}/api/journals?sort=order:asc&locale=${locale}`,
-    { next: { revalidate: 3600 } }
-  );
-  if (!res.ok) return [];
-  const json = await res.json();
-  return json.data.map((item: any) => ({
-    id: item.id,
-    title: item.title ?? "",
-    description: item.description ?? "",
-    url: item.url ?? "",
-  }));
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/journals?sort=order:asc&locale=${locale}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data.map((item: any) => ({
+      id: item.id,
+      title: item.title ?? "",
+      description: item.description ?? "",
+      url: item.url ?? "",
+    }));
+  } catch (err) {
+    console.warn("getJournals: API unavailable", err);
+    return [];
+  }
 }

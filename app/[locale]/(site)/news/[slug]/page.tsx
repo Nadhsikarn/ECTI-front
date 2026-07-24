@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { RichTextRenderer } from "@/components/rich-text-renderer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -13,7 +13,7 @@ import {
   Clock,
   User,
   CalendarDays,
-  Tag,
+  CalendarClock,
   FileText,
   Download,
 } from "lucide-react";
@@ -21,6 +21,7 @@ import {
   getNewsPosts,
   getNewsPostBySlug,
   getRelatedPosts,
+  formatEventDate,
 } from "@/lib/news-data";
 import { NewsShareButton } from "@/components/news-share-button";
 import { NewsStickyTitle } from "@/components/news-sticky-title";
@@ -66,6 +67,9 @@ export default async function NewsDetailPage({ params }: PageProps) {
     isTh ? "th-TH" : "en-US",
     { year: "numeric", month: "long", day: "numeric" }
   );
+  const eventDate = post.eventDate
+    ? formatEventDate(post.eventDate, post.eventEndDate, locale)
+    : null;
 
   const relatedPosts = await getRelatedPosts(post.slug, post.tags, 3, locale);
 
@@ -97,10 +101,12 @@ export default async function NewsDetailPage({ params }: PageProps) {
           <article className="rounded-xl border border-border bg-card p-6 shadow-sm lg:col-span-2 lg:p-8">
             {/* Cover image is the card preview only; images inside the article come from the body. */}
             <div className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <CalendarDays className="h-4 w-4 text-primary" />
-                {dict.news.publishedOn} {date}
-              </span>
+              {eventDate && (
+                <span className="flex items-center gap-1.5 font-medium text-foreground">
+                  <CalendarClock className="h-4 w-4 text-primary" />
+                  {dict.news.eventDate}: {eventDate}
+                </span>
+              )}
               <span className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4 text-primary" />
                 {post.readTimeMin} {dict.news.minRead}
@@ -111,6 +117,10 @@ export default async function NewsDetailPage({ params }: PageProps) {
                   {post.author}
                 </span>
               )}
+              <span className="flex items-center gap-1.5">
+                <CalendarDays className="h-4 w-4 text-primary" />
+                {dict.news.publishedOn} {date}
+              </span>
             </div>
 
             <div className="prose prose-sm max-w-none">
@@ -158,77 +168,58 @@ export default async function NewsDetailPage({ params }: PageProps) {
           </article>
 
           <aside className="flex flex-col gap-6">
-            <Card className="border-primary/20">
-              <CardHeader className="rounded-t-lg bg-primary/5">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Tag className="h-4 w-4 text-primary" />
-                  {dict.news.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-                      {dict.news.publishedOn}
-                    </span>
-                    <span className="text-sm text-card-foreground">{date}</span>
-                  </div>
-                  <Separator />
-                  {post.author && (
-                    <>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-                          {dict.news.author}
-                        </span>
-                        <span className="text-sm text-card-foreground">{post.author}</span>
-                      </div>
-                      <Separator />
-                    </>
-                  )}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-primary">Tags</span>
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {post.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className={`text-[10px] ${getTagStyle(tag)}`}>
-                          {getTagLabel(tag, dict)}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {relatedPosts.length > 0 && (
+            {(post.tags.length > 0 || relatedPosts.length > 0) && (
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">{dict.news.relatedPosts}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-4">
-                    {relatedPosts.map((related, i) => {
-                      const relTitle = related.title;
-                      const relDate = new Date(related.date).toLocaleDateString(
-                        isTh ? "th-TH" : "en-US",
-                        { year: "numeric", month: "long", day: "numeric" }
-                      );
-                      return (
-                        <div key={related.slug}>
-                          <Link href={`/${locale}/news/${related.slug}`} className="group/related flex flex-col gap-1">
-                            <span className="text-xs text-muted-foreground">{relDate}</span>
-                            <span className="text-sm font-medium leading-snug text-card-foreground group-hover/related:text-primary transition-colors line-clamp-2">
-                              {relTitle}
-                            </span>
-                            <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary">
-                              {dict.common.readMore}
-                              <ArrowRight className="h-3 w-3" />
-                            </span>
-                          </Link>
-                          {i < relatedPosts.length - 1 && <Separator className="mt-3" />}
-                        </div>
-                      );
-                    })}
-                  </div>
+                <CardContent className="flex flex-col gap-4">
+                  {/* Tags — the one piece of sidebar info not already in the top meta bar */}
+                  {post.tags.length > 0 && (
+                    <div>
+                      <h2 className="mb-3 text-base font-semibold text-foreground">
+                        {dict.news.tagsTitle}
+                      </h2>
+                      <div className="flex flex-wrap gap-1.5">
+                        {post.tags.map((tag) => (
+                          <Badge key={tag} variant="outline" className={`text-[10px] ${getTagStyle(tag)}`}>
+                            {getTagLabel(tag, dict)}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {post.tags.length > 0 && relatedPosts.length > 0 && <Separator />}
+
+                  {relatedPosts.length > 0 && (
+                    <div>
+                      <h2 className="mb-3 text-base font-semibold text-foreground">
+                        {dict.news.relatedPosts}
+                      </h2>
+                      <div className="flex flex-col gap-4">
+                        {relatedPosts.map((related, i) => {
+                          const relTitle = related.title;
+                          const relDate = new Date(related.date).toLocaleDateString(
+                            isTh ? "th-TH" : "en-US",
+                            { year: "numeric", month: "long", day: "numeric" }
+                          );
+                          return (
+                            <div key={related.slug}>
+                              <Link href={`/${locale}/news/${related.slug}`} className="group/related flex flex-col gap-1">
+                                <span className="text-xs text-muted-foreground">{relDate}</span>
+                                <span className="text-sm font-medium leading-snug text-card-foreground group-hover/related:text-primary transition-colors line-clamp-2">
+                                  {relTitle}
+                                </span>
+                                <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary">
+                                  {dict.common.readMore}
+                                  <ArrowRight className="h-3 w-3" />
+                                </span>
+                              </Link>
+                              {i < relatedPosts.length - 1 && <Separator className="mt-3" />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}

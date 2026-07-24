@@ -33,7 +33,9 @@ export interface NewsPost {
   title: string;
   summary: string;
   body: any[];      // Rich text blocks
-  date: string;     // ISO date
+  date: string;     // ISO date — the (editable) post date, falls back to publishedAt
+  eventDate: string | null;    // event start / single day, or null
+  eventEndDate: string | null; // event last day when multi-day, else null
   tags: NewsTag[];
   author?: string;
   readTimeMin: number;
@@ -48,7 +50,11 @@ function mapNewsPost(item: any): NewsPost {
     title: item.title ?? "",
     summary: item.summary ?? "",
     body: item.body ?? [],
-    date: item.publishedAt ?? item.createdAt ?? item.date ?? "",
+    // Prefer the editable published_date (lets migrated posts keep their old-site
+    // date); fall back to Strapi's managed publishedAt for pre-existing entries.
+    date: item.published_date ?? item.publishedAt ?? item.createdAt ?? item.date ?? "",
+    eventDate: item.event_date ?? null,
+    eventEndDate: item.event_end_date ?? null,
     tags: toNewsTags(item.tags),
     author: item.author ?? undefined,
     readTimeMin: item.read_time_min ?? 1,
@@ -109,8 +115,8 @@ export async function getNewsPosts(locale: string): Promise<NewsPost[]> {
   return merged
     .sort(
       (a, b) =>
-        new Date(b.publishedAt ?? b.createdAt ?? 0).getTime() -
-        new Date(a.publishedAt ?? a.createdAt ?? 0).getTime()
+        new Date(b.published_date ?? b.publishedAt ?? b.createdAt ?? 0).getTime() -
+        new Date(a.published_date ?? a.publishedAt ?? a.createdAt ?? 0).getTime()
     )
     .map(mapNewsPost);
 }
@@ -132,6 +138,66 @@ export async function getNewsPostBySlug(slug: string, locale: string): Promise<N
     }
   }
   return undefined;
+}
+
+// Human-friendly event date. Single day → "5 มีนาคม 2569"; a multi-day range in
+// the same month collapses → "5–8 มีนาคม 2569"; a range spanning months keeps both
+// month names → "28 กุมภาพันธ์ – 3 มีนาคม 2569". Dates are read in UTC so a
+// date-only value never shifts a day across timezones.
+//
+// We pull day / month-name / year out with formatToParts and join them ourselves
+// instead of using Intl's formatRange: formatRange's separator + spacing come from
+// ICU locale data that differs between Node (server) and the browser, which makes
+// the SSR HTML disagree with the client render → a React hydration error. The parts
+// (a number, a month name) are stable across ICU versions, so composing by hand
+// keeps server and client byte-identical.
+export function formatEventDate(
+  start: string,
+  end: string | null | undefined,
+  locale: string
+): string {
+  const loc = locale === "th" ? "th-TH" : "en-US";
+  const isTh = locale === "th";
+  const DASH = "–";
+
+  const partsOf = (d: Date) => {
+    const p = new Intl.DateTimeFormat(loc, {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).formatToParts(d);
+    const get = (t: string) => p.find((x) => x.type === t)?.value ?? "";
+    return { day: get("day"), month: get("month"), year: get("year") };
+  };
+  const one = (p: { day: string; month: string; year: string }) =>
+    isTh ? `${p.day} ${p.month} ${p.year}` : `${p.month} ${p.day}, ${p.year}`;
+
+  const startDate = new Date(start);
+  const s = partsOf(startDate);
+  if (!end) return one(s);
+
+  const endDate = new Date(end);
+  if (startDate.getTime() === endDate.getTime()) return one(s);
+  const e = partsOf(endDate);
+
+  const sameYear = startDate.getUTCFullYear() === endDate.getUTCFullYear();
+  const sameMonth = sameYear && startDate.getUTCMonth() === endDate.getUTCMonth();
+
+  if (sameMonth) {
+    // 5–8 มีนาคม 2569  /  March 5–8, 2026
+    return isTh
+      ? `${s.day}${DASH}${e.day} ${s.month} ${s.year}`
+      : `${s.month} ${s.day}${DASH}${e.day}, ${s.year}`;
+  }
+  if (sameYear) {
+    // 28 กุมภาพันธ์ – 3 มีนาคม 2569  /  February 28 – March 3, 2026
+    return isTh
+      ? `${s.day} ${s.month} ${DASH} ${e.day} ${e.month} ${s.year}`
+      : `${s.month} ${s.day} ${DASH} ${e.month} ${e.day}, ${s.year}`;
+  }
+  // Different years → spell out both ends fully.
+  return `${one(s)} ${DASH} ${one(e)}`;
 }
 
 export async function getRelatedPosts(

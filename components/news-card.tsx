@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Newspaper, Tag, User } from "lucide-react";
+import { ArrowRight, CalendarDays, Newspaper, Tag, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { NewsPost, NewsTag } from "@/lib/news-data";
+import { formatEventDate, type NewsPost, type NewsTag } from "@/lib/news-data";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 export function getTagLabel(tag: NewsTag, dict: Dictionary): string {
@@ -40,15 +40,13 @@ export function NewsCard({
   locale: Locale;
   dict: Dictionary;
 }) {
-  const isTh = locale === "th";
   const title = post.title;
   const summary = post.summary;
-  const date = post.date
-    ? new Date(post.date).toLocaleDateString(
-        isTh ? "th-TH" : "en-US",
-        { year: "numeric", month: "long", day: "numeric" }
-      )
-    : "";
+  // The event date shows in the meta row (events only). The card carries no post
+  // date — it lives on the article page — so viewers never see two dates.
+  const eventDateLabel = post.eventDate
+    ? formatEventDate(post.eventDate, post.eventEndDate, locale)
+    : null;
 
   return (
     <Card className="group flex flex-col gap-0 overflow-hidden border-border pt-0 transition-shadow hover:shadow-lg">
@@ -100,10 +98,12 @@ export function NewsCard({
 
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 pt-2 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            {date}
-          </span>
+          {eventDateLabel && (
+            <span className="flex items-center gap-1 font-medium text-foreground">
+              <CalendarDays className="h-3.5 w-3.5 text-primary" />
+              {eventDateLabel}
+            </span>
+          )}
           <span className="flex items-center gap-1">
             <Tag className="h-3.5 w-3.5" />
             {post.readTimeMin} {dict.news.minRead}

@@ -37,12 +37,18 @@ export interface ECTIEvent {
 
 //fetch by slug
 export async function fetchEventBySlug(slug: string, locale: string) {
-  const res = await fetch(
-    `${API_URL}?populate=*&filters[slug][$eq]=${slug}&locale=${locale}`,
-    { next: { revalidate: 3600 } }
-  );
-
-  const json = await res.json();
+  let json: any;
+  try {
+    const res = await fetch(
+      `${API_URL}?populate=*&filters[slug][$eq]=${slug}&locale=${locale}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    json = await res.json();
+  } catch (err) {
+    console.warn(`fetchEventBySlug(${slug}): API unavailable, using fallback`, err);
+    return null;
+  }
 
   if (!json || !Array.isArray(json.data) || json.data.length === 0) {
     return null;
@@ -77,12 +83,18 @@ export async function fetchEventBySlug(slug: string, locale: string) {
 // Ordered newest-first here rather than in the client: EventsListClient re-sorts
 // by status with a stable sort, so this date order survives within each status group.
 export async function fetchEventsFromAPI(locale: string): Promise<ECTIEvent[]> {
-  const res = await fetch(
-    `${API_URL}?populate=*&sort=event_start_date:desc&locale=${locale}`,
-    { next: { revalidate: 3600 } }
-  );
-
-  const json = await res.json();
+  let json: any;
+  try {
+    const res = await fetch(
+      `${API_URL}?populate=*&sort=event_start_date:desc&locale=${locale}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+    json = await res.json();
+  } catch (err) {
+    console.warn("fetchEventsFromAPI: API unavailable", err);
+    return [];
+  }
 
   if (!json || !Array.isArray(json.data)) {
     console.warn("fetchEventsFromAPI: Invalid data received", json);
@@ -148,14 +160,18 @@ export async function getFeaturedEvents(
   locale: string,
   limit = 5
 ): Promise<FeaturedEvent[]> {
-  const res = await fetch(
-    `${API_URL}?populate=*&sort=event_start_date:desc&pagination[limit]=${limit}&locale=${locale}`,
-    { next: { revalidate: 3600 } }
-  );
-
-  if (!res.ok) return [];
-
-  const json = await res.json();
+  let json: any;
+  try {
+    const res = await fetch(
+      `${API_URL}?populate=*&sort=event_start_date:desc&pagination[limit]=${limit}&locale=${locale}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+    json = await res.json();
+  } catch (err) {
+    console.warn("getFeaturedEvents: API unavailable", err);
+    return [];
+  }
   if (!Array.isArray(json?.data)) return [];
 
   return json.data.map((item: any) => ({

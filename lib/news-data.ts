@@ -70,13 +70,18 @@ function mapNewsPost(item: any): NewsPost {
 // a single language). Fetch one locale's rows; callers merge across locales so a
 // post never disappears / 404s just because it wasn't translated.
 async function fetchNewsRows(locale: string): Promise<any[]> {
-  const res = await fetch(
-    `${BASE_URL}/api/news-posts?populate[tags]=true&populate[cover_image]=true&sort=publishedAt:desc&locale=${locale}`,
-    { next: { revalidate: 3600 } }
-  );
-  if (!res.ok) return [];
-  const json = await res.json();
-  return (json.data ?? []).filter((item: any) => item.slug); // skip entries with no slug
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/news-posts?populate[tags]=true&populate[cover_image]=true&sort=publishedAt:desc&locale=${locale}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data ?? []).filter((item: any) => item.slug); // skip entries with no slug
+  } catch (err) {
+    console.warn(`fetchNewsRows(${locale}): API unavailable`, err);
+    return [];
+  }
 }
 
 // Same post shares a documentId across locales (and the slug is non-localized too).
@@ -114,13 +119,17 @@ export async function getNewsPostBySlug(slug: string, locale: string): Promise<N
   // Try the requested locale first, then fall back to any locale that has the post.
   const tryLocales = [locale, ...locales.filter((l) => l !== locale)];
   for (const loc of tryLocales) {
-    const res = await fetch(
-      `${BASE_URL}/api/news-posts?filters[slug][$eq]=${slug}&populate[tags]=true&populate[cover_image]=true&populate[attachments][populate][file]=true&locale=${loc}`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) continue;
-    const json = await res.json();
-    if (json.data?.length) return mapNewsPost(json.data[0]);
+    try {
+      const res = await fetch(
+        `${BASE_URL}/api/news-posts?filters[slug][$eq]=${slug}&populate[tags]=true&populate[cover_image]=true&populate[attachments][populate][file]=true&locale=${loc}`,
+        { next: { revalidate: 3600 } }
+      );
+      if (!res.ok) continue;
+      const json = await res.json();
+      if (json.data?.length) return mapNewsPost(json.data[0]);
+    } catch (err) {
+      console.warn(`getNewsPostBySlug(${slug}, ${loc}): API unavailable`, err);
+    }
   }
   return undefined;
 }

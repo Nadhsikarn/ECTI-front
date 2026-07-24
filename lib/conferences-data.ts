@@ -8,19 +8,24 @@ export interface Conference {
 }
 
 export async function getConferences(locale: string): Promise<Conference[]> {
-  const res = await fetch(
-    `${BASE_URL}/api/conferences?sort=order:asc&locale=${locale}`,
-    { next: { revalidate: 3600 } }
-  );
-  if (!res.ok) return [];
-  const json = await res.json();
-  return json.data.map((item: any) => ({
-    id: item.id,
-    title: item.title ?? "",
-    description: item.description ?? "",
-    years: (item.years ?? "")
-      .split(",")
-      .map((y: string) => y.trim())
-      .filter(Boolean),
-  }));
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/conferences?sort=order:asc&locale=${locale}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data.map((item: any) => ({
+      id: item.id,
+      title: item.title ?? "",
+      description: item.description ?? "",
+      years: (item.years ?? "")
+        .split(",")
+        .map((y: string) => y.trim())
+        .filter(Boolean),
+    }));
+  } catch (err) {
+    console.warn("getConferences: API unavailable", err);
+    return [];
+  }
 }

@@ -39,6 +39,11 @@ export default async function ContactPage({ params }: PageProps) {
   const phone = contact?.phone || dict.contact.phoneText;
   const officeHours = contact?.officeHours || dict.contact.officeHoursText;
 
+  // Google Maps "embed" URL from Share → Embed a map — pins the exact ECTI office.
+  // hl (the two `!1s<lang>` params) is swapped to the active locale so the map's
+  // street labels match the page language.
+  const mapSrc = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242.0434713034624!2d100.54326716954719!3d13.917137807386315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e283003340e689%3A0x77d36fd43b03d76!2zRUNUSSAo4Liq4Lih4Liy4LiE4Lih4Lin4Li04LiK4Liy4LiB4Liy4Lij4LmE4Lif4Lif4LmJ4LiyIOC4reC4tOC5gOC4peC5h-C4geC4ryDguITguK3guKHguK8p!5e0!3m2!1s${locale}!2sth!4v1785069858784!5m2!1s${locale}!2sth`;
+
   const contactCards = [
     {
       icon: MapPin,
@@ -133,64 +138,33 @@ export default async function ContactPage({ params }: PageProps) {
             }}
           />
 
-          {/* Map Placeholder */}
+          {/* Map */}
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-bold text-foreground">
               {dict.contact.mapTitle}
             </h2>
             <Card className="flex-1 overflow-hidden border-border">
               <CardContent className="relative h-full min-h-[350px] p-0">
-                {/* Map placeholder with styling */}
-                <div className="flex h-full items-center justify-center bg-secondary/50">
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                      <MapPin className="h-8 w-8 text-primary" />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-semibold text-foreground">
-                        {locale === "th"
-                          ? "มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ"
-                          : "KMUTNB"}
-                      </p>
-                      <p className="max-w-xs text-xs text-muted-foreground">
-                        {address}
-                      </p>
-                    </div>
-                    <a
-                      href="https://maps.google.com/?q=King+Mongkut+University+of+Technology+North+Bangkok"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                    >
-                      <MapPin className="h-4 w-4" />
-                      {locale === "th" ? "เปิดใน Google Maps" : "Open in Google Maps"}
-                    </a>
-                  </div>
-                </div>
-                {/* Decorative grid pattern */}
-                <svg
-                  className="absolute inset-0 h-full w-full opacity-[0.04]"
-                  aria-hidden="true"
-                >
-                  <defs>
-                    <pattern
-                      id="map-grid"
-                      width="32"
-                      height="32"
-                      patternUnits="userSpaceOnUse"
-                    >
-                      <path
-                        d="M0 32V0h32"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                      />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#map-grid)" />
-                </svg>
+                {/* No API key needed — this is Google Maps' own "embed a map" URL. */}
+                <iframe
+                  src={mapSrc}
+                  title={dict.contact.mapTitle}
+                  className="absolute inset-0 h-full w-full border-0"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </CardContent>
             </Card>
+            <a
+              href="https://maps.app.goo.gl/32RRbTGiBKTEaLin6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+            >
+              <MapPin className="h-4 w-4 text-primary" />
+              {locale === "th" ? "เปิดใน Google Maps" : "Open in Google Maps"}
+            </a>
           </div>
         </section>
       </div>

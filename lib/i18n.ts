@@ -262,7 +262,7 @@ const dictionaries = {
       description: "ติดต่อสมาคม ECTI สำหรับข้อมูลเพิ่มเติม",
       addressTitle: "ที่อยู่",
       addressText:
-        "สมาคม ECTI สำนักงานคณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ กรุงเทพฯ 10800",
+        "โครงการเดอะ แพลนท์ ซิตี้ เลขที่ 92/67 หมู่ 5 ตำบลบ้านใหม่ อำเภอปากเกร็ด จังหวัดนนทบุรี 11120",
       emailTitle: "อีเมล",
       emailText: "info@ecti.or.th",
       phoneTitle: "โทรศัพท์",
@@ -583,7 +583,7 @@ const dictionaries = {
       description: "Get in touch with ECTI for more information.",
       addressTitle: "Address",
       addressText:
-        "ECTI Association, Faculty of Engineering, King Mongkut's University of Technology North Bangkok, Bangkok 10800, Thailand",
+        "The Plant City, 92/67 Moo 5, Ban Mai, Pak Kret, Nonthaburi 11120, Thailand",
       emailTitle: "Email",
       emailText: "info@ecti.or.th",
       phoneTitle: "Phone",

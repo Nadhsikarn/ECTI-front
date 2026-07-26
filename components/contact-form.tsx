@@ -7,36 +7,60 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, CheckCircle2 } from "lucide-react";
 
+// Web3Forms access key routes submissions to the destination inbox. It lives in
+// an env var so the org can change the destination email later (make a new key,
+// swap this value) without touching code. It's used client-side by design.
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
 interface ContactFormProps {
   labels: {
     formTitle: string;
     formName: string;
     formEmail: string;
+    formContactPlaceholder: string;
     formSubject: string;
     formMessage: string;
     formSend: string;
     formSuccess: string;
+    formError: string;
   };
 }
 
 export function ContactForm({ labels }: ContactFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget; // capture before await (currentTarget clears after)
+    setError(false);
     setSending(true);
-    // mock submit delay
-    setTimeout(() => {
+    try {
+      const formData = new FormData(form);
+      formData.append("access_key", ACCESS_KEY ?? "");
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    } finally {
       setSending(false);
-      setSubmitted(true);
-    }, 1200);
+    }
   }
 
   if (submitted) {
     return (
-      <Card className="border-border">
-        <CardContent className="flex flex-col items-center gap-4 p-10 text-center">
+      <Card className="h-full border-border">
+        <CardContent className="flex flex-1 flex-col items-center justify-center gap-4 p-10 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <CheckCircle2 className="h-8 w-8 text-primary" />
           </div>
@@ -68,6 +92,7 @@ export function ContactForm({ labels }: ContactFormProps) {
             </label>
             <Input
               id="name"
+              name="name"
               type="text"
               required
               placeholder={labels.formName}
@@ -75,14 +100,15 @@ export function ContactForm({ labels }: ContactFormProps) {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="text-sm font-medium text-foreground">
+            <label htmlFor="contact" className="text-sm font-medium text-foreground">
               {labels.formEmail}
             </label>
             <Input
-              id="email"
-              type="email"
+              id="contact"
+              name="contact"
+              type="text"
               required
-              placeholder={labels.formEmail}
+              placeholder={labels.formContactPlaceholder}
               className="border-input"
             />
           </div>
@@ -92,6 +118,7 @@ export function ContactForm({ labels }: ContactFormProps) {
             </label>
             <Input
               id="subject"
+              name="subject"
               type="text"
               required
               placeholder={labels.formSubject}
@@ -104,12 +131,25 @@ export function ContactForm({ labels }: ContactFormProps) {
             </label>
             <Textarea
               id="message"
+              name="message"
               rows={5}
               required
               placeholder={labels.formMessage}
               className="border-input"
             />
           </div>
+
+          {/* Honeypot — hidden from humans; bots that tick it get flagged as spam. */}
+          <input
+            type="checkbox"
+            name="botcheck"
+            className="hidden"
+            style={{ display: "none" }}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+
           <Button
             type="submit"
             disabled={sending}
@@ -127,6 +167,12 @@ export function ContactForm({ labels }: ContactFormProps) {
               </span>
             )}
           </Button>
+
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {labels.formError}
+            </p>
+          )}
         </form>
       </CardContent>
     </Card>

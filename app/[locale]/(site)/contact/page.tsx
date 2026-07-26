@@ -126,10 +126,12 @@ export default async function ContactPage({ params }: PageProps) {
               formTitle: dict.contact.formTitle,
               formName: dict.contact.formName,
               formEmail: dict.contact.formEmail,
+              formContactPlaceholder: dict.contact.formContactPlaceholder,
               formSubject: dict.contact.formSubject,
               formMessage: dict.contact.formMessage,
               formSend: dict.contact.formSend,
               formSuccess: dict.contact.formSuccess,
+              formError: dict.contact.formError,
             }}
           />
 

@@ -9,6 +9,9 @@
  */
 
 export interface ResourceItem {
+  /** Stable id, mirrors the Strapi `key` field. Lets the reimbursement guide
+   *  link a step to this document without duplicating the href. */
+  key?: string;
   /** Display title (Thai unless the source is English) */
   title: string;
   /** Optional English title */
@@ -26,11 +29,11 @@ export interface ResourceItem {
 /** กล่อง 1 — เอกสารของสมาคม
  *  ใช้เป็น fallback (ลิงก์เว็บเก่า) จนกว่าจะอัปโหลดไฟล์เข้า Strapi (ดู lib/documents-data.ts) */
 export const associationDocuments: ResourceItem[] = [
-  { title: "ข้อบังคับสมาคม (ฉบับวันที่ 8 มีนาคม 2567)", titleEn: "Association Bylaws (8 Mar 2024)", href: "https://ecti-thailand.org/wp-content/uploads/2024/03/%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%9A%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B1%E0%B8%9A%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%B5%E0%B9%88-8-%E0%B8%A1%E0%B8%B5%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%A1-2567-%E0%B8%AA%E0%B8%84-51.pdf", external: true, meta: "PDF · 2.4 MB" },
-  { title: "แบบฟอร์มการเบิกเงิน", titleEn: "Reimbursement Form", href: "https://ecti-thailand.org/wp-content/uploads/2024/03/%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%9F%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%A1%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%9A%E0%B8%B4%E0%B8%81%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99.pdf", external: true, meta: "PDF · 183 KB" },
-  { title: "ใบรับรองแทนใบเสร็จรับเงิน (2566)", titleEn: "Receipt Substitute Certificate (2023)", href: "https://ecti-thailand.org/wp-content/uploads/2023/10/%E0%B9%83%E0%B8%9A%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%A3%E0%B8%AD%E0%B8%87%E0%B9%81%E0%B8%97%E0%B8%99%E0%B9%83%E0%B8%9A%E0%B9%80%E0%B8%AA%E0%B8%A3%E0%B9%87%E0%B8%88%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99_2566.pdf", external: true, meta: "PDF · 67 KB" },
-  { title: "ใบสำคัญรับเงิน ECTI (2566)", titleEn: "Payment Voucher (2023)", href: "https://ecti-thailand.org/wp-content/uploads/2023/10/%E0%B9%83%E0%B8%9A%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99-ECTI_-2566.pdf", external: true, meta: "PDF · 81 KB" },
-  { title: "ใบสำคัญยืมเงิน ECTI", titleEn: "Loan Voucher", href: "https://ecti-thailand.org/wp-content/uploads/2024/03/%E0%B9%83%E0%B8%9A%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D%E0%B8%A2%E0%B8%B7%E0%B8%A1%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99ECTI.doc.pdf", external: true, meta: "PDF · 123 KB" },
+  { key: "bylaws", title: "ข้อบังคับสมาคม (ฉบับวันที่ 8 มีนาคม 2567)", titleEn: "Association Bylaws (8 Mar 2024)", href: "https://ecti-thailand.org/wp-content/uploads/2024/03/%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%9A%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B1%E0%B8%9A%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%B5%E0%B9%88-8-%E0%B8%A1%E0%B8%B5%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%A1-2567-%E0%B8%AA%E0%B8%84-51.pdf", external: true, meta: "PDF · 2.4 MB" },
+  { key: "reimbursement-form", title: "แบบฟอร์มการเบิกเงิน", titleEn: "Reimbursement Form", href: "https://ecti-thailand.org/wp-content/uploads/2024/03/%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%9F%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%A1%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%9A%E0%B8%B4%E0%B8%81%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99.pdf", external: true, meta: "PDF · 183 KB" },
+  { key: "receipt-substitute", title: "ใบรับรองแทนใบเสร็จรับเงิน (2566)", titleEn: "Receipt Substitute Certificate (2023)", href: "https://ecti-thailand.org/wp-content/uploads/2023/10/%E0%B9%83%E0%B8%9A%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%A3%E0%B8%AD%E0%B8%87%E0%B9%81%E0%B8%97%E0%B8%99%E0%B9%83%E0%B8%9A%E0%B9%80%E0%B8%AA%E0%B8%A3%E0%B9%87%E0%B8%88%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99_2566.pdf", external: true, meta: "PDF · 67 KB" },
+  { key: "payment-voucher", title: "ใบสำคัญรับเงิน ECTI (2566)", titleEn: "Payment Voucher (2023)", href: "https://ecti-thailand.org/wp-content/uploads/2023/10/%E0%B9%83%E0%B8%9A%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99-ECTI_-2566.pdf", external: true, meta: "PDF · 81 KB" },
+  { key: "loan-voucher", title: "ใบสำคัญยืมเงิน ECTI", titleEn: "Loan Voucher", href: "https://ecti-thailand.org/wp-content/uploads/2024/03/%E0%B9%83%E0%B8%9A%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D%E0%B8%A2%E0%B8%B7%E0%B8%A1%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99ECTI.doc.pdf", external: true, meta: "PDF · 123 KB" },
 ];
 
 /** กล่อง 2 — ลิงก์ที่เกี่ยวข้อง (E-book จากสมาชิก ECTI) */

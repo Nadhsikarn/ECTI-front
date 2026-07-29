@@ -41,7 +41,12 @@ export async function getAssociationDocuments(
       typeof item.link === "string" && item.link.trim() ? item.link.trim() : null;
     const href = item.file?.url ? absoluteMediaUrl(item.file.url) : link;
     if (!href) continue;
-    mapped.push({ title: item.title || "", href, external: true });
+    mapped.push({
+      key: typeof item.key === "string" ? item.key : undefined,
+      title: item.title || "",
+      href,
+      external: true,
+    });
   }
 
   return mapped.length > 0 ? mapped : associationDocuments;

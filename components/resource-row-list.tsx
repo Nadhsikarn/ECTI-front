@@ -10,6 +10,8 @@ interface ResourceRowListProps {
   openLabel: string;
   /** Leading icon for each row (defaults to a magazine icon) */
   icon?: LucideIcon;
+  /** 2 pairs the rows up on large screens — keeps short lists from looking sparse */
+  columns?: 1 | 2;
 }
 
 /**
@@ -22,9 +24,16 @@ export function ResourceRowList({
   locale,
   openLabel,
   icon: Icon = Newspaper,
+  columns = 1,
 }: ResourceRowListProps) {
+  const twoUp = columns === 2;
+
   return (
-    <ul className="flex flex-col gap-3">
+    <ul
+      className={
+        twoUp ? "grid gap-3 lg:grid-cols-2" : "flex flex-col gap-3"
+      }
+    >
       {items.map((item, i) => {
         const title =
           locale === "en" && item.titleEn ? item.titleEn : item.title;
@@ -35,14 +44,20 @@ export function ResourceRowList({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${openLabel}: ${title}`}
-              className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className={`group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                twoUp ? "h-full" : ""
+              }`}
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Icon className="h-5 w-5" />
               </span>
 
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-card-foreground">
+                <span
+                  className={`block text-sm font-semibold text-card-foreground ${
+                    twoUp ? "line-clamp-2" : "truncate"
+                  }`}
+                >
                   {title}
                 </span>
                 {item.meta && (

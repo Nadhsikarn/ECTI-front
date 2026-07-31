@@ -22,6 +22,9 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
   // fades after four seconds is the wrong home for one. Errors stay as toasts —
   // they're short and the reader needs to stay on the field to fix them.
   const [sent, setSent] = useState(false);
+  // Honeypot, same trick the contact form uses: hidden from people, so anything
+  // that ticks it is filling the form without looking at it.
+  const [botcheck, setBotcheck] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,7 +34,7 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, locale }),
+        body: JSON.stringify({ email, locale, botcheck }),
       });
       const data = await res.json().catch(() => ({}));
 
@@ -40,6 +43,8 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
         setSent(true);
       } else if (res.status === 409 || data?.error === "duplicate") {
         toast.info(dict.home.newsletterDuplicate);
+      } else if (res.status === 429) {
+        toast.error(dict.home.newsletterTooMany);
       } else if (res.status === 400 || data?.error === "invalid_email") {
         toast.error(dict.home.newsletterInvalid);
       } else {
@@ -113,6 +118,18 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
                 className="h-11 flex-1 border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50 focus-visible:ring-primary-foreground/30"
                 required
               />
+              <input
+                type="checkbox"
+                name="botcheck"
+                checked={botcheck}
+                onChange={(e) => setBotcheck(e.target.checked)}
+                className="hidden"
+                style={{ display: "none" }}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
               <Button
                 type="submit"
                 disabled={loading}

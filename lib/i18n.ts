@@ -99,6 +99,7 @@ const dictionaries = {
       newsletterConfirmed:
         "ขอบคุณที่สมัครรับข่าวสาร ต่อจากนี้ข่าวสาร กิจกรรม และประกาศจากสมาคม ECTI จะถูกส่งไปยังอีเมลของคุณ",
       newsletterBackHome: "กลับสู่หน้าแรก",
+      newsletterTooMany: "คุณกดสมัครบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่อีกครั้ง",
       newsletterInvalid: "กรุณากรอกอีเมลให้ถูกต้อง",
       newsletterError: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
     },
@@ -439,6 +440,7 @@ const dictionaries = {
       newsletterConfirmed:
         "Thank you for subscribing. News, events and announcements from the ECTI Association will now be sent to your email.",
       newsletterBackHome: "Back to home",
+      newsletterTooMany: "Too many attempts. Please wait a moment and try again.",
       newsletterInvalid: "Please enter a valid email address.",
       newsletterError: "Something went wrong. Please try again.",
     },

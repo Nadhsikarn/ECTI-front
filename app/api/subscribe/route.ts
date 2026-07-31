@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 
 // Newsletter signup → Brevo, using Brevo's double opt-in endpoint: it stores the
 // address as *unconfirmed* and mails a confirmation link, and only a click on
@@ -16,6 +17,56 @@ const DOI_TEMPLATE_ID = Number(process.env.BREVO_DOI_TEMPLATE_ID);
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const HOUR = 60 * 60 * 1000;
+
+// Sized for how people actually behave: nobody subscribes their household from
+// one address more than a handful of times an hour, and three confirmation
+// mails for the same address in a day is already generous for "it didn't
+// arrive, send it again".
+const PER_IP_LIMIT = 5;
+const PER_IP_WINDOW = HOUR;
+const PER_EMAIL_LIMIT = 3;
+const PER_EMAIL_WINDOW = 24 * HOUR;
+
+/**
+ * Best-effort client address. Vercel puts the real one first in
+ * x-forwarded-for; locally there is no proxy and every caller collapses into
+ * one "unknown" bucket, which is fine — the limit still holds in dev, it just
+ * holds for everyone at once.
+ */
+function clientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
+/**
+ * Rejects anything that didn't come from our own pages.
+ *
+ * Browsers send Origin on every POST, so a real submission always has one that
+ * matches the host serving it. A script pointed straight at this route
+ * generally doesn't — cheap to check, and it doesn't need a list of allowed
+ * hosts to maintain, so preview deploys and localhost work unchanged.
+ */
+function sameOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
+function tooManyRequests(retryAfter: number) {
+  return NextResponse.json(
+    { error: "rate_limited" },
+    { status: 429, headers: { "Retry-After": String(retryAfter) } }
+  );
+}
 
 /** Names what's missing so a misconfigured deploy says so instead of 500-ing blind. */
 function missingConfig(): string[] {
@@ -56,11 +107,29 @@ async function findContact(email: string): Promise<{ listIds?: number[]; emailBl
 }
 
 export async function POST(request: Request) {
-  let body: { email?: string; locale?: string };
+  if (!sameOrigin(request)) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
+
+  let body: { email?: string; locale?: string; botcheck?: unknown };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+  }
+
+  // Honeypot: the field is hidden, so only a bot filling the form blindly sets
+  // it. Answer as if it worked — telling it apart from a real signup only
+  // teaches whoever wrote it to stop filling the field.
+  if (body.botcheck) {
+    return NextResponse.json({ ok: true }, { status: 201 });
+  }
+
+  // Counted before the email is even validated, so spraying junk addresses
+  // costs the same budget as spraying real ones.
+  const byIp = rateLimit(`ip:${clientIp(request)}`, PER_IP_LIMIT, PER_IP_WINDOW);
+  if (!byIp.ok) {
+    return tooManyRequests(byIp.retryAfter);
   }
 
   const email = (body.email ?? "").trim().toLowerCase();
@@ -84,6 +153,14 @@ export async function POST(request: Request) {
   const existing = await findContact(email);
   if (existing && existing.listIds?.includes(LIST_ID) && !existing.emailBlacklisted) {
     return NextResponse.json({ error: "duplicate" }, { status: 409 });
+  }
+
+  // Past the duplicate check, so this only ever counts mails we're about to
+  // actually send. It's the cap on "resend the link, it never arrived" —
+  // legitimate, but not fifty times.
+  const byEmail = rateLimit(`email:${email}`, PER_EMAIL_LIMIT, PER_EMAIL_WINDOW);
+  if (!byEmail.ok) {
+    return tooManyRequests(byEmail.retryAfter);
   }
 
   let res: Response;

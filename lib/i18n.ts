@@ -91,8 +91,14 @@ const dictionaries = {
       newsletterPlaceholder: "กรอกอีเมลของคุณ",
       newsletterButton: "สมัครรับข่าว",
       newsletterDisclaimer: "เราจะไม่ส่งสแปมให้คุณ สามารถยกเลิกได้ตลอดเวลา",
-      newsletterSuccess: "สมัครรับข่าวสารเรียบร้อยแล้ว ขอบคุณค่ะ",
-      newsletterDuplicate: "อีเมลนี้สมัครรับข่าวไว้แล้ว",
+      newsletterSuccess:
+        "ส่งอีเมลยืนยันไปแล้ว กรุณาตรวจสอบกล่องจดหมายของคุณ (รวมถึงอีเมลขยะ) แล้วกดลิงก์ยืนยันเพื่อเริ่มรับข่าวสาร",
+      newsletterDuplicate: "อีเมลนี้สมัครไว้แล้ว หรือกำลังรอการยืนยัน",
+      newsletterAnother: "สมัครด้วยอีเมลอื่น",
+      newsletterConfirmedTitle: "ยืนยันเรียบร้อยแล้ว",
+      newsletterConfirmed:
+        "ขอบคุณที่สมัครรับข่าวสาร ต่อจากนี้ข่าวสาร กิจกรรม และประกาศจากสมาคม ECTI จะถูกส่งไปยังอีเมลของคุณ",
+      newsletterBackHome: "กลับสู่หน้าแรก",
       newsletterInvalid: "กรุณากรอกอีเมลให้ถูกต้อง",
       newsletterError: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
     },
@@ -425,8 +431,14 @@ const dictionaries = {
       newsletterPlaceholder: "Enter your email",
       newsletterButton: "Subscribe",
       newsletterDisclaimer: "We respect your privacy. Unsubscribe at any time.",
-      newsletterSuccess: "You're subscribed. Thank you!",
-      newsletterDuplicate: "This email is already subscribed.",
+      newsletterSuccess:
+        "We've sent a confirmation email. Please check your inbox (and your spam folder), then click the link to finish subscribing.",
+      newsletterDuplicate: "This email is already subscribed, or waiting to be confirmed.",
+      newsletterAnother: "Subscribe another email",
+      newsletterConfirmedTitle: "You're subscribed",
+      newsletterConfirmed:
+        "Thank you for subscribing. News, events and announcements from the ECTI Association will now be sent to your email.",
+      newsletterBackHome: "Back to home",
       newsletterInvalid: "Please enter a valid email address.",
       newsletterError: "Something went wrong. Please try again.",
     },

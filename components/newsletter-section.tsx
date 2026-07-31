@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Mail } from "lucide-react";
+import { Mail, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,11 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
   const locale = pathname?.startsWith("/en") ? "en" : "th";
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  // Success replaces the form instead of firing a toast: "check your inbox, look
+  // in spam, click the link" is an instruction to act on, and a message that
+  // fades after four seconds is the wrong home for one. Errors stay as toasts —
+  // they're short and the reader needs to stay on the field to fix them.
+  const [sent, setSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,8 +36,8 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
       const data = await res.json().catch(() => ({}));
 
       if (res.ok) {
-        toast.success(dict.home.newsletterSuccess);
         setEmail("");
+        setSent(true);
       } else if (res.status === 409 || data?.error === "duplicate") {
         toast.info(dict.home.newsletterDuplicate);
       } else if (res.status === 400 || data?.error === "invalid_email") {
@@ -57,17 +62,40 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
 
           <div className="relative flex flex-col items-center gap-6">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/10">
-              <Mail className="h-7 w-7" aria-hidden="true" />
+              {sent ? (
+                <MailCheck className="h-7 w-7" aria-hidden="true" />
+              ) : (
+                <Mail className="h-7 w-7" aria-hidden="true" />
+              )}
             </div>
 
             <h2 className="text-balance text-3xl font-bold md:text-4xl">
               {dict.home.sectionNewsletter}
             </h2>
 
-            <p className="max-w-lg text-pretty text-primary-foreground/80">
-              {dict.home.newsletterSubtitle}
-            </p>
+            {sent ? (
+              <p
+                role="status"
+                className="max-w-lg text-pretty text-base leading-relaxed text-primary-foreground"
+              >
+                {dict.home.newsletterSuccess}
+              </p>
+            ) : (
+              <p className="max-w-lg text-pretty text-primary-foreground/80">
+                {dict.home.newsletterSubtitle}
+              </p>
+            )}
 
+            {sent ? (
+              <Button
+                type="button"
+                onClick={() => setSent(false)}
+                variant="outline"
+                className="h-11 border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+              >
+                {dict.home.newsletterAnother}
+              </Button>
+            ) : (
             <form
               onSubmit={handleSubmit}
               className="flex w-full max-w-md flex-col gap-3 sm:flex-row"
@@ -93,10 +121,13 @@ export function NewsletterSection({ dict }: NewsletterSectionProps) {
                 {dict.home.newsletterButton}
               </Button>
             </form>
+            )}
 
-            <p className="text-xs text-primary-foreground/60">
-              {dict.home.newsletterDisclaimer}
-            </p>
+            {!sent && (
+              <p className="text-xs text-primary-foreground/60">
+                {dict.home.newsletterDisclaimer}
+              </p>
+            )}
           </div>
         </div>
       </div>

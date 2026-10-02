@@ -155,31 +155,32 @@ const dictionaries = {
       // Application status check — the #status section. The status itself is
       // never rendered, only mailed; statusSent is therefore the same sentence
       // whether or not an application was found.
-      statusTitle: "ตรวจสอบสถานะใบสมัคร",
+      statusTitle: "ตรวจสอบสถานะสมาชิก",
       statusDesc:
-        "กรอกอีเมลที่ใช้ในใบสมัคร ระบบจะส่งสถานะปัจจุบันของใบสมัครไปที่อีเมลนั้น",
+        "กรอกอีเมลที่ใช้ในใบสมัคร ระบบจะส่งสถานะใบสมัครไปที่อีเมลนั้น หากเป็นสมาชิกแล้วจะแจ้งวันที่เริ่มเป็นสมาชิกและวันหมดอายุด้วย",
       statusPlaceholder: "อีเมลที่ใช้สมัคร",
-      statusButton: "ส่งสถานะไปที่อีเมล",
+      statusButton: "ส่งข้อมูลไปที่อีเมล",
       statusSent:
-        "ถ้าอีเมลนี้มีใบสมัครอยู่ในระบบ เราได้ส่งสถานะไปให้แล้ว กรุณาตรวจกล่องจดหมาย รวมถึงโฟลเดอร์สแปมหรือจดหมายขยะ",
+        "เราได้ส่งผลการตรวจสอบไปที่อีเมลนี้แล้ว กรุณาตรวจกล่องจดหมาย รวมถึงโฟลเดอร์สแปมหรือจดหมายขยะ",
       statusAnother: "ตรวจสอบอีเมลอื่น",
       statusInvalid: "รูปแบบอีเมลไม่ถูกต้อง",
       statusTooMany: "ขอตรวจสอบบ่อยเกินไป กรุณารอสักครู่แล้วลองอีกครั้ง",
       statusError: "ส่งไม่สำเร็จ กรุณาลองอีกครั้ง",
       statusHelp: [
         {
-          q: "ทำไมส่งสถานะไปที่อีเมล ไม่แสดงบนหน้าเว็บ",
+          q: "ทำไมส่งข้อมูลไปที่อีเมล ไม่แสดงบนหน้าเว็บ",
           a: [
-            "สถานะใบสมัครเป็นข้อมูลส่วนบุคคล ถ้าแสดงบนหน้าเว็บ ใครก็กรอกอีเมลของคนอื่นเพื่อดูได้",
-            "การส่งเข้าอีเมลทำให้มีแต่เจ้าของอีเมลนั้นที่เห็นสถานะของตัวเอง และเป็นเหตุผลที่ไม่ต้องมีรหัสยืนยันให้ยุ่งยาก",
+            "สถานะใบสมัครและวันหมดอายุสมาชิกเป็นข้อมูลส่วนบุคคล ถ้าแสดงบนหน้าเว็บ ใครก็กรอกอีเมลของคนอื่นเพื่อดูได้",
+            "การส่งเข้าอีเมลทำให้มีแต่เจ้าของอีเมลนั้นที่เห็นข้อมูลของตัวเอง และเป็นเหตุผลที่ไม่ต้องมีรหัสยืนยันให้ยุ่งยาก",
           ],
         },
         {
-          q: "แต่ละสถานะหมายถึงอะไร",
+          q: "อีเมลที่ได้รับจะแจ้งอะไรบ้าง",
           a: [
             "กำลังพิจารณา — สมาคมได้รับใบสมัครแล้ว อยู่ในขั้นตอนตรวจสอบเอกสารและหลักฐานการชำระเงิน",
-            "อนุมัติแล้ว — ใบสมัครผ่านการพิจารณาเรียบร้อย",
+            "อนุมัติแล้ว — ใบสมัครผ่านการพิจารณาเรียบร้อย พร้อมแจ้งวันที่ยื่นใบสมัคร วันที่เริ่มเป็นสมาชิก และวันหมดอายุสมาชิกภาพ",
             "ไม่ผ่านการพิจารณา — ติดต่อสมาคมเพื่อสอบถามเหตุผลหรือยื่นสมัครใหม่ได้",
+            "ไม่พบใบสมัคร — ไม่มีใบสมัครที่ใช้อีเมลนี้ในระบบ ตรวจว่ากรอกอีเมลถูกต้อง หรือสมัครสมาชิกได้ที่หน้านี้",
           ],
         },
         {
@@ -539,13 +540,13 @@ const dictionaries = {
       // Application status check — the #status section. The status itself is
       // never rendered, only mailed; statusSent is therefore the same sentence
       // whether or not an application was found.
-      statusTitle: "Check Application Status",
+      statusTitle: "Check Membership Status",
       statusDesc:
-        "Enter the email address you applied with and we will send the current status of your application to it.",
+        "Enter the email address you applied with and we will send your application status to it. If you are already a member, it also includes your membership start and expiry dates.",
       statusPlaceholder: "Email used to apply",
-      statusButton: "Email me the status",
+      statusButton: "Email me my status",
       statusSent:
-        "If an application exists for this address, its status has been sent. Please check your inbox, including the spam or junk folder.",
+        "The result has been sent to this address. Please check your inbox, including the spam or junk folder.",
       statusAnother: "Check another address",
       statusInvalid: "That email address doesn't look right",
       statusTooMany: "Too many requests — please wait a moment and try again",
@@ -554,16 +555,17 @@ const dictionaries = {
         {
           q: "Why is the status emailed instead of shown here?",
           a: [
-            "An application's status is personal data. Shown on the page, anyone could type in somebody else's address and read it.",
-            "Emailing it means only the owner of that mailbox sees their own status — which is also why no confirmation code is needed.",
+            "Your application status and membership expiry date are personal data. Shown on the page, anyone could type in somebody else's address and read them.",
+            "Emailing them means only the owner of that mailbox sees their own details — which is also why no confirmation code is needed.",
           ],
         },
         {
-          q: "What does each status mean?",
+          q: "What will the email tell me?",
           a: [
             "Under review — the association has your application and is checking the documents and proof of payment.",
-            "Approved — your application has been accepted.",
+            "Approved — your application has been accepted. The email also shows your application date, membership start date and membership expiry date.",
             "Not approved — contact the association to ask why, or to apply again.",
+            "No application found — there is no application under this address. Check that it is spelled correctly, or apply for membership on this page.",
           ],
         },
         {

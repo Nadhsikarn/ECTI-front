@@ -110,16 +110,44 @@ export default async function PublicationsPage({ params }: PageProps) {
                       <p className="whitespace-pre-line leading-relaxed text-muted-foreground">
                         {conf.description}
                       </p>
-                      {conf.years.length > 0 && (
+                      {conf.yearLinks.length > 0 && (
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="text-xs font-medium text-muted-foreground">
                             {dict.publications.conferencesYearsLabel}:
                           </span>
-                          {conf.years.map((year) => (
-                            <Badge key={year} variant="secondary" className="font-normal">
-                              {year}
-                            </Badge>
-                          ))}
+                          {/* Keyed by position, not by year: an editor can
+                              enter the same year twice, and React would then
+                              drop one of the two badges without a word. */}
+                          {conf.yearLinks.map(({ year, link }, index) =>
+                            link ? (
+                              <a
+                                key={`${year}-${index}`}
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`${conf.title} ${year}`}
+                                className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                              >
+                                {/* The hover state is the only thing telling a
+                                    reader which of twenty badges can be
+                                    clicked, so it carries real weight here. */}
+                                <Badge
+                                  variant="secondary"
+                                  className="font-normal transition-colors hover:bg-accent hover:text-accent-foreground"
+                                >
+                                  {year}
+                                </Badge>
+                              </a>
+                            ) : (
+                              <Badge
+                                key={`${year}-${index}`}
+                                variant="secondary"
+                                className="font-normal"
+                              >
+                                {year}
+                              </Badge>
+                            )
+                          )}
                         </div>
                       )}
                     </div>

@@ -343,6 +343,9 @@ const dictionaries = {
       journalARDDesc:"วารสารที่ครอบคลุมงานวิจัยด้านการประยุกต์ใช้เทคโนโลยีวิศวกรรมไฟฟ้า อิเล็กทรอนิกส์ คอมพิวเตอร์ และสารสนเทศ เพื่อนำไปสู่นวัตกรรมที่เป็นประโยชน์",
       conferencesTitle: "งานประชุมวิชาการที่จัดเป็นประจำ",
       conferencesYearsLabel: "ปีที่จัด",
+      conferencesTimes: "ครั้ง",
+      conferencesShowYears: "ดูทั้งหมด",
+      conferencesHideYears: "ย่อ",
     },
     resources: {
       title: "แหล่งข้อมูล",
@@ -733,6 +736,9 @@ const dictionaries = {
         "A journal covering applied research in electrical engineering, electronics, computer, and information technology, driving innovation for practical benefit.",
       conferencesTitle: "Our Regular Conferences",
       conferencesYearsLabel: "Years held",
+      conferencesTimes: "editions",
+      conferencesShowYears: "Show all",
+      conferencesHideYears: "Collapse",
     },
     resources: {
       title: "Resources",

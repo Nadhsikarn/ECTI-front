@@ -1,11 +1,11 @@
 import { getDictionary, isValidLocale } from "@/lib/i18n";
+import { ConferenceYears } from "@/components/conference-years";
 import type { Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, CalendarDays, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { getJournals } from "@/lib/publications-data";
 import { getConferences } from "@/lib/conferences-data";
 import { safeUrl } from "@/lib/safe-url";
@@ -110,46 +110,11 @@ export default async function PublicationsPage({ params }: PageProps) {
                       <p className="whitespace-pre-line leading-relaxed text-muted-foreground">
                         {conf.description}
                       </p>
-                      {conf.yearLinks.length > 0 && (
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="text-xs font-medium text-muted-foreground">
-                            {dict.publications.conferencesYearsLabel}:
-                          </span>
-                          {/* Keyed by position, not by year: an editor can
-                              enter the same year twice, and React would then
-                              drop one of the two badges without a word. */}
-                          {conf.yearLinks.map(({ year, link }, index) =>
-                            link ? (
-                              <a
-                                key={`${year}-${index}`}
-                                href={link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${conf.title} ${year}`}
-                                className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                              >
-                                {/* The hover state is the only thing telling a
-                                    reader which of twenty badges can be
-                                    clicked, so it carries real weight here. */}
-                                <Badge
-                                  variant="secondary"
-                                  className="font-normal transition-colors hover:bg-accent hover:text-accent-foreground"
-                                >
-                                  {year}
-                                </Badge>
-                              </a>
-                            ) : (
-                              <Badge
-                                key={`${year}-${index}`}
-                                variant="secondary"
-                                className="font-normal"
-                              >
-                                {year}
-                              </Badge>
-                            )
-                          )}
-                        </div>
-                      )}
+                      <ConferenceYears
+                        label={dict.publications.conferencesYearsLabel}
+                        years={conf.yearLinks}
+                        dict={dict}
+                      />
                     </div>
                   </CardContent>
                 </Card>
